@@ -1,0 +1,28 @@
+.main-panel {
+  @apply w-screen h-screen bg-right-top   bg-no-repeat;
+  * {
+    @apply select-none;
+  }
+}
+
+.login-panel {
+  @apply mx-auto w-fit h-full bg-blue-400/30 lg:ml-96;
+}
+
+.body-login-panel {
+  @apply bg-white w-fit rounded px-10 pt-10 top-1/2 -translate-y-1/2 relative;
+  button {
+    @apply ml-9 rounded-t bg-blue-400/30 bottom-0 relative mt-5 px-2 py-0.5 text-white font-bold hover:bg-blue-400/90;
+  }
+}
+
+.group-input {
+  @apply flex flex-row gap-2 justify-between first:mb-5 last:mt-5;
+  label {
+    @apply w-7;
+  }
+
+  input:is([type=text],[type=password]) {
+    @apply bg-blue-400/30 rounded p-1 focus:outline-none;
+  }
+}
