@@ -1,7 +1,5 @@
 import './globals.css'
-import TopNavigator from "@/components/TopNavigator";
-import SearchBar from "@/components/SearchBar";
-import MenuSide from "@/components/MenuSide";
+import {ReactNode} from "react";
 
 export const metadata = {
     title: 'Create Next App',
@@ -11,22 +9,11 @@ export const metadata = {
 export default function RootLayout({
                                        children,
                                    }: {
-    children: React.ReactNode
+    children: ReactNode
 }) {
     return (
         <html lang="en">
-        <body className={'bg-blue-400'}>
-        <TopNavigator centerChildren={<SearchBar/>}/>
-        <div className='flex mt-10 h-max'>
-            <div className='flex-1'>
-                <MenuSide items={[{
-                    title: 'a',
-                    icon: ''
-                }]}/>
-            </div>
-            <div className='flex-1'></div>
-            <div className='flex-1'></div>
-        </div>
+        <body>
         {children}
         </body>
         </html>
