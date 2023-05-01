@@ -1,4 +1,5 @@
 export default interface UserInfo {
-    fullname: string
-    avatar: string
+	id: string
+	fullName?: string | null
+	avatar?: string | null
 }
