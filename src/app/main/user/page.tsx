@@ -5,8 +5,9 @@ import {useRouter} from 'next/navigation';
 export default function Page() {
 	const router = useRouter()
 	return <>
-		<button onClick={()=>{
+		<button onClick={() => {
 			router.push('/main')
-		}}>a</button>
+		}}>a
+		</button>
 	</>
 }

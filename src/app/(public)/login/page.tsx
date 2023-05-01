@@ -40,18 +40,18 @@ export default function Page(props: Props) {
 			<div className={styles['login-panel']}>
 				<div className={styles['body-login-panel']}>
 					<div className={styles['group-input']}>
-						<label><PersonIcon color="info"/></label>
-						<input type="text" onChange={e => {
+						<label><PersonIcon color='info'/></label>
+						<input type='text' onChange={e => {
 							setUsername((e.target as HTMLInputElement).value)
 						}}/>
 					</div>
 					<div className={styles['group-input']}>
-						<label><PasswordIcon color="info"/></label>
-						<input type="password" onChange={e => {
+						<label><PasswordIcon color='info'/></label>
+						<input type='password' onChange={e => {
 							setPassword((e.target as HTMLInputElement).value)
 						}}/>
 					</div>
-					<button type="button" onClick={login} className={styles['login-button']}>LOGIN</button>
+					<button type='button' onClick={login} className={styles['login-button']}>LOGIN</button>
 				</div>
 			</div>
 		</div>

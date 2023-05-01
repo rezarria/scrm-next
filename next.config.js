@@ -5,6 +5,14 @@ const nextConfig = {
 	},
 	images: {
 		domains: ['t.htvncdn.net']
+	},
+	async rewrites() {
+		return [
+			{
+				source: '/',
+				destination: '/main',
+			},
+		]
 	}
 }
 
