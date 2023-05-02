@@ -1,13 +1,11 @@
 'use client'
 
-import {useRouter} from 'next/navigation';
+import {useRouter} from 'next/navigation'
+import PostList from '@/components/PostList'
 
-export default function Page() {
+export default function Page () {
 	const router = useRouter()
 	return <>
-		<button onClick={() => {
-			router.push('./user')
-		}}>a
-		</button>
+		<PostList/>
 	</>
 }

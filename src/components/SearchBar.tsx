@@ -1,8 +1,8 @@
 'use client'
 
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from '@mui/icons-material/Search'
 
-export default function SearchBar() {
+export default function SearchBar () {
 	return (
 		<div className='bg-neutral-500 rounded-full p-0.5 px-3 flex flex-row'>
 			<input type='text' name='search-content' id='search-content'

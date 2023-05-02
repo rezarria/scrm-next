@@ -1,10 +1,10 @@
-import Image from 'next/image';
+import Image from 'next/image'
 
 export interface MenuSideProps {
-	items?: { icon?: string | null, title?: string | null, onClick?: Function }[]
+	items?: { icon?: string | null, title?: string | null, onClick?: Function }[];
 }
 
-export default function MenuSide(props: MenuSideProps) {
+export default function MenuSide (props: MenuSideProps) {
 	return <ul className='bg-white rounded-r min-w-[200px] w-fit h-full p-3'>
 		{props.items && props.items.map((n, i) => <li key={i}>
 			<div

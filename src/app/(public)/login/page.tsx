@@ -12,10 +12,10 @@ interface Props {
 }
 
 interface LoginResponse {
-	token: string
+	token: string;
 }
 
-export default function Page(props: Props) {
+export default function Page (props: Props) {
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 	const routerNavigation = useRouterNativation()

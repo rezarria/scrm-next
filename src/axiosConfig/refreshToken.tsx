@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'
 
 interface RefreshResponse {
 	jwtToken: string,
@@ -24,7 +24,7 @@ const refreshToken = async (): Promise<RefreshResponse> => {
 
 let task: Promise<RefreshResponse> | null = null
 
-export default function setup() {
+export default function setup () {
 	axios.interceptors.request.use(
 		async (res) => {
 			if (task !== null) {
@@ -40,10 +40,10 @@ export default function setup() {
 
 	axios.interceptors.response.use(
 		(response) => {
-			return response;
+			return response
 		},
 		async (error) => {
-			const originalRequest = error.config;
+			const originalRequest = error.config
 			if (error.response.status === 401 && !originalRequest._retry) {
 				if (task === null) {
 					task = refreshToken()
@@ -52,9 +52,9 @@ export default function setup() {
 					})
 				}
 				await task
-				return axios(originalRequest);
+				return axios(originalRequest)
 			}
-			return Promise.reject(error);
+			return Promise.reject(error)
 		}
-	);
+	)
 }

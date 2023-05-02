@@ -1,14 +1,14 @@
 'use client'
 
-import {ReactNode, useEffect, useState} from 'react';
-import {useRouter as userRouterNavigation} from 'next/navigation';
-import axios from 'axios';
-import UserInfoContext from '@/context/userInfoContext';
-import UserInfo from '@/model/UserInfo';
+import {ReactNode, useEffect, useState} from 'react'
+import {useRouter as userRouterNavigation} from 'next/navigation'
+import axios from 'axios'
+import UserInfoContext from '@/context/userInfoContext'
+import UserInfo from '@/model/UserInfo'
 
 export interface Response {
-	lastUpdate: string
-	user: UserInfo
+	lastUpdate: string;
+	user: UserInfo;
 }
 
 enum Status {
@@ -16,10 +16,10 @@ enum Status {
 }
 
 interface PrivateRouteProps {
-	children?: ReactNode
+	children?: ReactNode;
 }
 
-function PrivateRoute(props: PrivateRouteProps) {
+function PrivateRoute (props: PrivateRouteProps) {
 	const [status, setStatus] = useState<Status>(Status.LOADING)
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
 	const navigation = userRouterNavigation()

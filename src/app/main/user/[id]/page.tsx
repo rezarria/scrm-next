@@ -1,20 +1,20 @@
 'use client'
 
-import {useContext, useEffect, useState} from 'react';
-import UserInfoContext from '@/context/userInfoContext';
-import UserInfo from '@/model/UserInfo';
-import axios from 'axios';
-import UserHome from '@/components/UserHome';
-import Button from '@/components/Button';
-import {useRouter} from 'next/navigation';
+import {useContext, useEffect, useState} from 'react'
+import UserInfoContext from '@/context/userInfoContext'
+import UserInfo from '@/model/UserInfo'
+import axios from 'axios'
+import UserHome from '@/components/UserHome'
+import Button from '@/components/Button'
+import {useRouter} from 'next/navigation'
 
 interface PageProps {
 	params: {
 		id: string
-	}
+	};
 }
 
-export default function Page(props: PageProps) {
+export default function Page (props: PageProps) {
 	const [userInfo, setUserinfo] = useState<UserInfo | null>(null)
 	const [self, setSelf] = useState(true)
 	const [error, setError] = useState(false)
@@ -37,7 +37,8 @@ export default function Page(props: PageProps) {
 
 	return <>
 		<div className='w-full h-full'>
-			{error ? <div className='text-white bg-red-700 h-auto p-2 flex flex-row justify-between items-center'><span>KHÔNG TÌM THẤY NGƯỜI DÙNG</span><Button className='p-1' title='Quay lại trang đầu' onClick={() => {
+			{error ? <div className='text-white bg-red-700 h-auto p-2 flex flex-row justify-between items-center'><span>KHÔNG TÌM THẤY NGƯỜI DÙNG</span><Button
+				className='p-1' title='Quay lại trang đầu' onClick={() => {
 				router.push('/')
 			}}/></div> : <>
 				{userInfo && <UserHome userInfo={userInfo} addFriendButton={self}/>}
