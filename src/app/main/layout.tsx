@@ -9,6 +9,7 @@ import PrivateRoute from '@/router/PrivateRoute';
 import UserInfo from '@/model/UserInfo';
 import {useRouter} from 'next/navigation';
 import axios from 'axios';
+import GoMain from '@/components/GoMain';
 
 export default function RootLayout({
 									   children
@@ -31,7 +32,7 @@ export default function RootLayout({
 	});
 
 	axios.interceptors.response.use(function (response) {
-		return response;
+		return response
 	}, function (error) {
 		console.log(error)
 		return Promise.reject(error);
@@ -40,9 +41,9 @@ export default function RootLayout({
 	return (
 		<PrivateRoute>
 			<UserInfoContext.Provider value={userInfo}>
-				<div className='bg-blue-400 h-screen relative'>
-					<TopNavigator centerChildren={<SearchBar/>}/>
-					<div className='flex h-full pt-10'>
+				<div className='bg-blue-400 min-h-screen relative'>
+					<TopNavigator leftChildren={<GoMain/>} centerChildren={<SearchBar/>}/>
+					<div className='flex flex-row justify-center h-full pt-10'>
 						<Left/>
 						<Center>
 							{children}
@@ -68,20 +69,20 @@ function Left() {
 			icon: userInfo.avatar,
 			title: userInfo.fullName,
 			onClick: () => {
-				router.push(`/main/user/${userInfo.id}`)
+				router.push(`./user/${userInfo.id}`)
 			}
 		})
 	}
 
-	return <div className='flex-1'>
+	return <div className='flex-1 h-screen block fixed left-0'>
 		<MenuSide {...props}/>
 	</div>
 }
 
 function Center({children}: { children: ReactNode }) {
-	return <div className='flex-1'>{children}</div>
+	return <div className='basis-[800px] rounded mt-2.5 overflow-hidden'>{children}</div>
 }
 
 function Right() {
-	return <div className='flex-1'></div>
+	return <div className='flex-1 h-screen block fixed'></div>
 }

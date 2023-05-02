@@ -47,7 +47,7 @@ function PrivateRoute(props: PrivateRouteProps) {
 				})
 				.catch(error => {
 					setStatus(Status.ERROR)
-					throw error
+					navigation.push('/login')
 				})
 		}
 	}, [])

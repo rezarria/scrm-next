@@ -6,7 +6,7 @@ export default function Page() {
 	const router = useRouter()
 	return <>
 		<button onClick={() => {
-			router.push('/main/user')
+			router.push('./user')
 		}}>a
 		</button>
 	</>

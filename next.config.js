@@ -4,14 +4,18 @@ const nextConfig = {
 		appDir: true
 	},
 	images: {
-		domains: ['t.htvncdn.net']
+		domains: ['t.htvncdn.net', 'c4.wallpaperflare.com']
 	},
-	async rewrites() {
+	async rewrites () {
 		return [
 			{
 				source: '/',
-				destination: '/main',
+				destination: '/main'
 			},
+			{
+				source: '/:path*',
+				destination: '/main/:path*'
+			}
 		]
 	}
 }
