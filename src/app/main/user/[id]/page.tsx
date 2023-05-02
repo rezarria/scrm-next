@@ -33,7 +33,8 @@ export default function Page(props: PageProps) {
 			}).catch(_ => {
 				setError(true)
 			})
-	}, [])
+	}, [props.params.id])
+
 	return <>
 		<div className='w-full h-full'>
 			{error ? <div className='text-white bg-red-700 h-auto p-2 flex flex-row justify-between items-center'><span>KHÔNG TÌM THẤY NGƯỜI DÙNG</span><Button className='p-1' title='Quay lại trang đầu' onClick={() => {

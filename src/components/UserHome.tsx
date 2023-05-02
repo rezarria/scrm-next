@@ -10,10 +10,10 @@ interface UserHomeProps {
 export default function UserHome(props: UserHomeProps) {
 	return <div>
 		<div className='bg-neutral-300 rounded-b'>
-			<div className=''>
+			<div className='h-[300px] bg-amber-200'>
 				{props.userInfo.background &&
 					<Image src={props.userInfo.background} width='2000' height='2000' alt='background'
-						   className='max-h-[300px] object-cover'/>}
+						   className='h-full object-cover object-top'/>}
 			</div>
 			<div className='flex flex-row items-stretch gap-5 -top-10 relative px-14'>
 				<div className='rounded-full bg-black w-56 h-56 overflow-hidden border-2 border-opacity-40 border-blue-400'>

@@ -4,7 +4,7 @@ const nextConfig = {
 		appDir: true
 	},
 	images: {
-		domains: ['t.htvncdn.net', 'c4.wallpaperflare.com']
+		domains: ['t.htvncdn.net', 'c4.wallpaperflare.com', 't3.nhentai.net', 'qoulqaz.aipkdqbalngb.hath.network']
 	},
 	async rewrites () {
 		return [
