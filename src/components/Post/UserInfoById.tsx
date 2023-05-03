@@ -1,4 +1,4 @@
-import {memo, ReactNode, useContext, useEffect, useState} from 'react'
+import {ReactNode, useContext, useEffect, useState} from 'react'
 import UserContext from '@/context/UserContext'
 import UserInfo from './UserInfo'
 import {default as UserInfoModel} from '@/model/UserInfo'
@@ -6,10 +6,13 @@ import {default as UserInfoModel} from '@/model/UserInfo'
 function UserInfoById (props: { id: string, underName?: ReactNode }) {
 	const context = useContext(UserContext)
 	if (context === null) throw 'context rỗng'
-	const [user, setUser] = useState<UserInfoModel | null | undefined>(context.users.find(x => x.id === props.id))
+	const [user, setUser] = useState<UserInfoModel | null | undefined>(null)
 
 	useEffect(() => {
-		if (user == null) context.getUser(props.id).then(u => setUser(u))
+		if (user === null) {
+			console.log('không có thông tin user, truy vấn...')
+			context.getUser(props.id).then(u => setUser(u))
+		}
 	}, [])
 
 	return user ?
@@ -20,4 +23,4 @@ function UserInfoById (props: { id: string, underName?: ReactNode }) {
 		</div>
 }
 
-export default memo(UserInfoById)
+export default UserInfoById

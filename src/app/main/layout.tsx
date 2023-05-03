@@ -3,14 +3,14 @@
 import TopNavigator from '@/components/TopNavigator'
 import SearchBar from '@/components/SearchBar'
 import MenuSide, {MenuSideProps} from '@/components/MenuSide'
-import {ReactNode, useContext, useEffect, useState} from 'react'
+import {ReactNode, useContext, useEffect, useRef, useState} from 'react'
 import UserInfoContext from '@/context/userInfoContext'
 import PrivateRoute from '@/router/PrivateRoute'
 import UserInfo from '@/model/UserInfo'
 import {useRouter} from 'next/navigation'
 import axios from 'axios'
 import GoMain from '@/components/GoMain'
-import UserContext, {createInit, UserContextState} from '@/context/UserContext'
+import UserContext, {UserContextState} from '@/context/UserContext'
 
 function thietLapAxios () {
 	axios.interceptors.request.use(function (config) {
@@ -33,9 +33,45 @@ export default function RootLayout ({
 									}: {
 	children: ReactNode
 }) {
-	const [users, setUsers] = useState<UserInfo[]>([])
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
-	const [userContextValue] = useState<UserContextState>(createInit({users, setUsers}))
+	const users = useRef<UserInfo[]>([])
+	const job = useRef<{ task: Promise<UserInfo | null | undefined> | null }>({task: null})
+	let userContextValue: UserContextState = {
+		getUser: async id => {
+			console.log('bắt đầu truy vấn')
+			let user = users.current.find(x => x.id === id)
+			if (user !== undefined) return user
+			console.log('không tìm thấy user trong cache, truy vấn api')
+
+			while (true) {
+				if (job.current.task !== null) {
+					console.log('đang có bên khác yêu cầu. đợi....')
+					await job.current.task
+					console.log('đợi xong...')
+				}
+
+				user = users.current.find(x => x.id === id)
+				if (user === undefined) break
+				console.log(`${id} đã được lấy từ yêu cầu khác, huỷ truy vấn api`)
+				return user
+			}
+
+			console.log(`bắt đầu truy vấn thông tin với id ${id}`)
+			job.current.task = axios.get<UserInfo>(`http://localhost:8080/api/user/info?id=${id}`)
+				.then(r => {
+					if (r.status === 200) {
+						users.current.push(r.data)
+						return r.data
+					}
+					return null
+				}).finally(() => {
+					job.current.task = null
+				})
+
+			return await job.current.task
+		}
+	}
+
 
 	useEffect(() => {
 		setUserInfo(JSON.parse(localStorage.getItem('user info') ?? '{}') as UserInfo)
