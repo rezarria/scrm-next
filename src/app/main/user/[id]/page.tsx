@@ -7,12 +7,14 @@ import axios from 'axios'
 import UserHome from '@/components/UserHome'
 import Button from '@/components/Button'
 import {useRouter} from 'next/navigation'
+import PostList from '@/components/PostList'
 
 interface PageProps {
 	params: {
 		id: string
 	};
 }
+
 
 export default function Page (props: PageProps) {
 	const [userInfo, setUserinfo] = useState<UserInfo | null>(null)
@@ -37,12 +39,18 @@ export default function Page (props: PageProps) {
 
 	return <>
 		<div className='w-full h-full'>
-			{error ? <div className='text-white bg-red-700 h-auto p-2 flex flex-row justify-between items-center'><span>KHÔNG TÌM THẤY NGƯỜI DÙNG</span><Button
-				className='p-1' title='Quay lại trang đầu' onClick={() => {
-				router.push('/')
-			}}/></div> : <>
-				{userInfo && <UserHome userInfo={userInfo} addFriendButton={self}/>}
-			</>}
+			{error ?
+				<div className='text-white bg-red-700 h-auto p-2 flex flex-row justify-between items-center'>
+					<span>KHÔNG TÌM THẤY NGƯỜI DÙNG</span><Button
+					className='p-1' title='Quay lại trang đầu' onClick={() => {
+					router.push('/')
+				}}/>
+				</div>
+				:
+				<>
+					{userInfo && <UserHome userInfo={userInfo} addFriendButton={self}/>}
+					<PostList/>
+				</>}
 		</div>
 	</>
 }

@@ -49,7 +49,7 @@ export default function RootLayout ({
 				<UserInfoContext.Provider value={userInfo}>
 					<div className='bg-blue-400 min-h-screen relative'>
 						<TopNavigator leftChildren={<GoMain/>} centerChildren={<SearchBar/>}/>
-						<div className='flex flex-row justify-center h-screen box-border pt-10'>
+						<div className='flex flex-row justify-center min-h-screen box-border pt-10'>
 							<Left/>
 							<Center>
 								{children}
@@ -81,13 +81,13 @@ function Left () {
 		})
 	}
 
-	return <div className='flex-1 h-screen block fixed left-0'>
+	return <div className='flex-1 h-screen top-0 pt-10 block fixed left-0'>
 		<MenuSide {...props}/>
 	</div>
 }
 
 function Center ({children}: { children: ReactNode }) {
-	return <div className='basis-[800px] h-full pt-2.5'>
+	return <div className='basis-[800px] min-h-full h-fit pt-2.5'>
 		<div className='w-full h-full rounded overflow-hidden box-border'>
 			{children}
 		</div>

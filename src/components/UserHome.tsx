@@ -9,7 +9,7 @@ interface UserHomeProps {
 
 export default function UserHome (props: UserHomeProps) {
 	return <div>
-		<div className='bg-neutral-300 rounded-b'>
+		<div className='bg-neutral-300'>
 			<div className='h-[300px] bg-amber-200'>
 				{props.userInfo.background &&
 					<Image src={props.userInfo.background} width='2000' height='2000' alt='background'

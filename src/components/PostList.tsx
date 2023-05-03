@@ -23,7 +23,7 @@ export default function PostList () {
 			})
 	}, [oldestTime])
 
-	return <div className='w-full min-h-full bg-red-100'>
+	return <div className='w-full min-h-full h-fit bg-white px-16 pt-5 flex flex-col gap-2'>
 		{
 			posts.map(d => <Post key={d.id} data={d}/>)
 		}
