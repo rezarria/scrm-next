@@ -123,8 +123,8 @@ function Left () {
 }
 
 function Center ({children}: { children: ReactNode }) {
-	return <div className='basis-[800px] min-h-full h-fit pt-2.5'>
-		<div className='w-full h-full rounded overflow-hidden box-border'>
+	return <div className='w-[800px] min-h-screen pt-2.5'>
+		<div className='w-full min-h-full rounded overflow-hidden box-border'>
 			{children}
 		</div>
 	</div>

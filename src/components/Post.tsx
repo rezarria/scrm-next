@@ -12,7 +12,7 @@ export default function Post (props: PostProps) {
 			<div>{format(props.data.createdDate)}</div>
 		</>}/>
 		<div className='px-16'>
-			<div>{props.data.content}</div>
+			<div className='w-full h-fit break-words'>{props.data.content}</div>
 			<StatusZoneById id={props.data.id}/>
 		</div>
 	</div>
