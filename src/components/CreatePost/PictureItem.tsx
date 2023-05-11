@@ -1,5 +1,5 @@
-import CloseIcon from '@mui/icons-material/Close';
-import {useEffect, useRef} from 'react';
+import CloseIcon from '@mui/icons-material/Close'
+import {useEffect, useRef} from 'react'
 
 interface Props {
 	src?: string
@@ -18,7 +18,8 @@ export default function PictureItem (props: Props) {
 		<div ref={obj} className='group w-20 h-20 border rounded relative'>
 			<div onClick={() => {
 				if (props.onClose !== undefined) props.onClose()
-			}} className='absolute cursor-pointer -right-3 -top-3 bg-red-300 rounded-full w-6 h-6 leading-none hidden group-hover:block z-50'>
+			}}
+				 className='absolute cursor-pointer -right-3 -top-3 bg-red-300 rounded-full w-6 h-6 leading-none hidden group-hover:block z-50'>
 				<CloseIcon/></div>
 			<img ref={image} className='w-full h-full object-contain' alt='image'/>
 		</div>

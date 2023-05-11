@@ -1,5 +1,5 @@
-import PictureItem from '@/components/CreatePost/PictureItem';
-import {forwardRef, Ref, useImperativeHandle, useState} from 'react';
+import PictureItem from '@/components/CreatePost/PictureItem'
+import {ForwardedRef, forwardRef, useImperativeHandle, useState} from 'react'
 
 export type Props = {}
 
@@ -9,7 +9,9 @@ export type PictureSectionRef = {
 	get: () => string[]
 }
 
-function PictureSection (ref: Ref<PictureSectionRef>) {
+const PictureSection = forwardRef(PictureSectionComponent)
+
+function PictureSectionComponent (props: Props, ref: ForwardedRef<PictureSectionRef>) {
 	const [list, setList] = useState<string[]>([])
 	const dong = (n: string) => () => setList(list.filter(i => i != n))
 
@@ -17,7 +19,7 @@ function PictureSection (ref: Ref<PictureSectionRef>) {
 		add: (n: string) => setList([...list, n]),
 		remove: (n: string) => setList(list.filter(i => i !== n)),
 		get: () => list
-	}), []);
+	}), [])
 
 	return (
 		<div className='flex flex-row gap-1 border-t-2 pt-2'>
@@ -26,4 +28,4 @@ function PictureSection (ref: Ref<PictureSectionRef>) {
 	)
 }
 
-export default forwardRef(PictureSection)
+export default PictureSection

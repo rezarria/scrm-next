@@ -3,4 +3,5 @@ export default interface UserInfo {
 	fullName?: string | null;
 	avatar?: string | null;
 	background: string | null;
+	friends?: string[]
 }

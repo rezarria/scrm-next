@@ -1,0 +1,7 @@
+.active {
+  @apply bg-white;
+}
+
+.section {
+  @apply p-2 cursor-pointer hover:bg-white rounded;
+}

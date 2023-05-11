@@ -1,6 +1,8 @@
 import UserInfo from '@/model/UserInfo'
 import Image from 'next/image'
 import Button from '@/components/Button'
+import Link from 'next/link'
+import axios from 'axios'
 
 interface UserHomeProps {
 	userInfo: UserInfo,
@@ -24,7 +26,11 @@ export default function UserHome (props: UserHomeProps) {
 				<div className='flex flex-col justify-end'>
 					<div className='text-4xl'>{props.userInfo.fullName}</div>
 					<div className='min-h-[40%] flex flex-row items-start'>
-						{props.addFriendButton && <Button title='KẾT BẠN'/>}
+						{props.addFriendButton && <Button title='KẾT BẠN' onClick={() => {
+							axios.post('http://localhost:8080/api/user/friend/request', {
+								userId: props.userInfo.id, mode: 2
+							})
+						}}/>}
 					</div>
 				</div>
 			</div>
