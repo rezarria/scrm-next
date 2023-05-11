@@ -11,6 +11,7 @@ import {useRouter} from 'next/navigation'
 import axios from 'axios'
 import GoMain from '@/components/GoMain'
 import UserContext, {UserContextState} from '@/context/UserContext'
+import Notification from '@/components/Notification';
 
 function thietLapAxios () {
 	axios.interceptors.request.use(function (config) {
@@ -84,7 +85,8 @@ export default function RootLayout ({
 			<UserContext.Provider value={userContextValue}>
 				<UserInfoContext.Provider value={userInfo}>
 					<div className='bg-blue-400 min-h-screen relative'>
-						<TopNavigator leftChildren={<GoMain/>} centerChildren={<SearchBar/>}/>
+						<TopNavigator leftChildren={<GoMain/>} centerChildren={<SearchBar/>} rightChildren={
+							<Notification/>}/>
 						<div className='flex flex-row justify-center min-h-screen box-border pt-10'>
 							<Left/>
 							<Center>
@@ -131,5 +133,6 @@ function Center ({children}: { children: ReactNode }) {
 }
 
 function Right () {
-	return <div className='flex-1 h-screen block fixed'></div>
+	return <div className='flex-1 h-screen top-0 pt-10 block fixed right-0'>
+	</div>
 }

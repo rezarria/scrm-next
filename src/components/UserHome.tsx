@@ -1,7 +1,6 @@
 import UserInfo from '@/model/UserInfo'
 import Image from 'next/image'
 import Button from '@/components/Button'
-import Link from 'next/link'
 import axios from 'axios'
 
 interface UserHomeProps {
