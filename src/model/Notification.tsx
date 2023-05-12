@@ -5,8 +5,8 @@ export default interface Notification {
 	icon: string
 	iconLink: string
 	relId: string
-	mode: Mode
-	status: Staus
+	mode: keyof typeof Mode
+	status: keyof typeof Staus
 	lastModifiedDate: string
 }
 
