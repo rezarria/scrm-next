@@ -1,17 +1,42 @@
 'use client'
 
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import {useContext, useEffect, useState} from 'react';
-import UserInfoContext from '@/context/userInfoContext';
-import axios from 'axios';
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import {useContext, useEffect, useRef, useState} from 'react'
+import UserInfoContext from '@/context/userInfoContext'
+import axios from 'axios'
 import {default as NotificationModel} from '@/model/Notification'
+import NotificationItem from '@/components/NotificationItem'
 
 export default function Notification () {
 	const userInfo = useContext(UserInfoContext)
 	const [notification, setNotification] = useState<NotificationModel[]>([])
-
+	let startTime = useRef(new Date().toISOString())
+	let endTime = useRef(new Date().toISOString())
+	let job: Promise<void> | null = null
 	useEffect(() => {
-		axios.post<NotificationModel[]>('http://localhost:8080/api/user/notification/get/getNew', {})
+		let fetching = false
+		const getNotification = () => {
+			if (fetching) return
+			fetching = true
+			axios.post<NotificationModel[]>(`http://localhost:8080/api/user/notification/getNew?startTime=${startTime.current}&endTime=${endTime.current}`)
+				.then(r => {
+					if (r.status === 200) {
+						if (r.data.length !== 0) {
+							let mins = r.data.filter(x => x.lastModifiedDate.localeCompare(startTime.current) < 0).sort()
+							let maxs = r.data.filter(x => x.lastModifiedDate.localeCompare(endTime.current) > 0).sort().reverse()
+							if (maxs.length > 0) endTime.current = maxs[0].lastModifiedDate
+							if (mins.length > 0) startTime.current = mins[0].lastModifiedDate
+							setNotification([...notification, ...r.data].sort((a, b) => a.lastModifiedDate.localeCompare(b.lastModifiedDate)))
+						}
+					}
+				})
+				.finally(() => {
+					fetching = false
+					setTimeout(getNotification, 3000)
+				})
+		}
+		getNotification()
+
 	}, [])
 
 	if (userInfo === null) return <>!</>
@@ -20,7 +45,12 @@ export default function Notification () {
 	return (
 		<div className='cursor-pointer relative'>
 			<NotificationsIcon/>
-			<div className='mt-1 top-full left-0 absolute w-[300px] min-h-[200px] block rounded bg-white border border-blue-400 shadow'></div>
+			<div
+				className='mt-1 top-full left-0 absolute w-[300px] min-h-[200px] block rounded bg-white border border-blue-400 shadow'>
+				{
+					notification && notification.map(n => <NotificationItem key={n.id} notificationData={n}/>)
+				}
+			</div>
 		</div>
 	)
 }
