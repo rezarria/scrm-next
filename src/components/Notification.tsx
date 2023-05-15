@@ -22,10 +22,10 @@ export default function Notification () {
 				.then(r => {
 					if (r.status === 200) {
 						if (r.data.length !== 0) {
-							let mins = r.data.filter(x => x.lastModifiedDate.localeCompare(startTime.current) < 0).sort()
-							let maxs = r.data.filter(x => x.lastModifiedDate.localeCompare(endTime.current) > 0).sort().reverse()
-							if (maxs.length > 0) endTime.current = maxs[0].lastModifiedDate
-							if (mins.length > 0) startTime.current = mins[0].lastModifiedDate
+							let min = r.data.filter(x => x.lastModifiedDate.localeCompare(startTime.current) < 0).sort()
+							let max = r.data.filter(x => x.lastModifiedDate.localeCompare(endTime.current) > 0).sort().reverse()
+							if (max.length > 0) endTime.current = max[0].lastModifiedDate
+							if (min.length > 0) startTime.current = min[0].lastModifiedDate
 							setNotification([...notification, ...r.data].sort((a, b) => a.lastModifiedDate.localeCompare(b.lastModifiedDate)))
 						}
 					}
