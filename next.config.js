@@ -13,6 +13,10 @@ const nextConfig = {
 				destination: '/main'
 			},
 			{
+				source: '/chat/:path*',
+				destination: '/chat/:path*'
+			},
+			{
 				source: '/:path*',
 				destination: '/main/:path*'
 			}

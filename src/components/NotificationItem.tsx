@@ -1,9 +1,9 @@
 import Notification, {Mode} from '@/model/Notification'
-import {useContext, useEffect, useState} from 'react';
-import UserContext from '@/context/UserContext';
+import {useContext, useEffect, useState} from 'react'
+import UserContext from '@/context/UserContext'
 import UserInfo from '@/model/UserInfo'
-import axios from 'axios';
-import FriendRequest from '@/model/FriendRequest';
+import axios from 'axios'
+import FriendRequest from '@/model/FriendRequest'
 
 interface Props {
 	notificationData: Notification
@@ -30,7 +30,8 @@ export default function NotificationItem (props: Props) {
 
 	return (
 		<div className='group p-2 hover:bg-blue-500 hover:duration-100 duration-300 flex flex-row items-center gap-2'>
-			<div className='w-10 h-10 block bg-amber-100 rounded-full group-hover:border group-hover:border-black'></div>
+			<div
+				className='w-10 h-10 block bg-amber-100 rounded-full group-hover:border group-hover:border-black'></div>
 			<div>{content}</div>
 		</div>
 	)

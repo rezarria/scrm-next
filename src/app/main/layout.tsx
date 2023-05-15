@@ -11,7 +11,7 @@ import {useRouter} from 'next/navigation'
 import axios from 'axios'
 import GoMain from '@/components/GoMain'
 import UserContext, {UserContextState} from '@/context/UserContext'
-import Notification from '@/components/Notification';
+import Notification from '@/components/Notification'
 
 function thietLapAxios () {
 	axios.interceptors.request.use(function (config) {
