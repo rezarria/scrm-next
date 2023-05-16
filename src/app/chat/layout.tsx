@@ -2,6 +2,8 @@
 
 import {ReactNode} from 'react'
 import ChatSessionList from '@/components/Chat/ChatSessionList'
+import CreateNewSession from '@/components/Chat/CreateNewSession'
+import PrivateRoute from '@/router/PrivateRoute'
 
 interface Props {
 	children: ReactNode
@@ -9,9 +11,14 @@ interface Props {
 
 export default function Layout (props: Props) {
 	return (
-		<div className='flex flex-row h-screen'>
-			<div className='w-[300px] h-full border-r-2'><ChatSessionList/></div>
-			<div className='flex-grow'>{props.children}</div>
-		</div>
+		<PrivateRoute>
+			<div className='flex flex-row h-screen'>
+				<div className='w-[300px] h-full border-r-2 flex flex-col'>
+					<CreateNewSession/>
+					<ChatSessionList/>
+				</div>
+				<div className='flex-grow'>{props.children}</div>
+			</div>
+		</PrivateRoute>
 	)
 }
