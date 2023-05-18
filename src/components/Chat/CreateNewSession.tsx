@@ -5,6 +5,7 @@ import UserInfoContext from '@/context/userInfoContext'
 import {getFriends} from '@/utils/function'
 import FriendInfo from '@/model/FriendInfo'
 import Image from 'next/image'
+import axios from 'axios'
 
 interface Props {
 	userId?: string
@@ -37,22 +38,30 @@ export default function CreateNewSession (props: Props) {
 					<div className='rounded border'><input type='text' className='focus:outline-0 p-1'
 														   placeholder='tên người dùng'/></div>
 					<div className='flex flex-col gap-2'>
-						{
-							friends.map(k => (
-								<div key={k.id} className='flex flex-row gap-2 rounded bg-white p-2 cursor-pointer'>
-									<div className='rounded-full w-10 h-10 overflow-hidden bg-black'>
-										{k.avatar !== null && <Image src={k.avatar} alt='' width={200} height={200}/>}
-									</div>
-									<div>
-										{k.fullName}
-									</div>
-								</div>)
-							)
-						}
+						{friends.map(k => <FriendItem key={k.id} data={k}/>)}
 					</div>
 				</div>
 			</div>
 		</>
 		}
 	</>
+}
+
+function FriendItem ({data, onClick}: { data: FriendInfo, onClick?: Function }) {
+	return (
+		<div key={data.id} className='flex flex-row gap-2 rounded bg-white p-2 cursor-pointer' onClick={event => {
+			axios.post('http://localhost:8080/api/user/friend/createSession', {
+				users: [data.id]
+			}).then(value => {
+				if (onClick !== undefined) onClick()
+			})
+		}}>
+			<div className='rounded-full w-10 h-10 overflow-hidden bg-black'>
+				{data.avatar !== null && <Image src={data.avatar} alt='' width={200} height={200}/>}
+			</div>
+			<div>
+				{data.fullName}
+			</div>
+		</div>
+	)
 }
