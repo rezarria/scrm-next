@@ -34,7 +34,7 @@ export default function Page () {
 }
 
 type ThongBaoRef = {
-	show: (n: number) => void
+	show: (n: boolean) => void
 }
 
 type ThongBaoProps = {}
@@ -43,8 +43,11 @@ type ThongBaoProps = {}
 const ThongBao = forwardRef<ThongBaoRef, ThongBaoProps>((props, ref) => {
 	const [status, setStatus] = useState(false)
 
-	// useImperativeHandle(ref, () => ({
-	// }))
+	useImperativeHandle(ref, () => ({
+		show: n => {
+			setStatus(n)
+		}
+	}))
 
 	if (status)
 		return <div className='bg-green-600 p-2 text-center text-white font-bold rounded'>Thành công</div>
