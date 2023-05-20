@@ -156,9 +156,7 @@ const ImageInput = forwardRef<InputRef, InputProps>(
 							   height={300} alt={''}/>
 					}
 				</div>
-
 			</div>
-
 		)
 	}
 )
