@@ -33,14 +33,10 @@ function PrivateRoute (props: PrivateRouteProps) {
 		}
 		if (jwtStr !== null) {
 			axios.defaults.headers.common.Authorization = 'Bearer ' + jwtStr
-			let lastUpdate = localStorage.getItem('last update')
-			if (lastUpdate === null || isNaN(Date.parse(lastUpdate))) lastUpdate = new Date().toISOString()
-			axios.post<Response>('http://localhost:8080/api/user/lastUpdate', {lastUpdate})
+			getInfoFromApi()
 				.then(r => {
 					if (r.status === 200) {
 						setStatus(Status.DONE)
-						localStorage.setItem('last update', r.data.lastUpdate)
-						localStorage.setItem('user info', JSON.stringify(r.data.user))
 						setUserInfo(r.data.user)
 					}
 				})
@@ -58,7 +54,12 @@ function PrivateRoute (props: PrivateRouteProps) {
 			return <>
 				<CurrentUserInfoContext.Provider value={{
 					user: userInfo!,
-					setUser: setUserInfo
+					setUser: setUserInfo,
+					updateInfo: () => {
+						getInfoFromApi().then(r => {
+							if (r.status === 200) setUserInfo(JSON.parse(localStorage.getItem('user info') ?? '{}') as UserInfo)
+						})
+					}
 				}}>
 					{props.children}
 				</CurrentUserInfoContext.Provider>
@@ -69,3 +70,16 @@ function PrivateRoute (props: PrivateRouteProps) {
 }
 
 export default PrivateRoute
+
+function getInfoFromApi () {
+	let lastUpdate = localStorage.getItem('last update')
+	if (lastUpdate === null || isNaN(Date.parse(lastUpdate))) lastUpdate = new Date().toISOString()
+	return axios.post<Response>('http://localhost:8080/api/user/lastUpdate', {lastUpdate})
+		.then(r => {
+			if (r.status === 200) {
+				localStorage.setItem('last update', r.data.lastUpdate)
+				localStorage.setItem('user info', JSON.stringify(r.data.user))
+			}
+			return r
+		})
+}

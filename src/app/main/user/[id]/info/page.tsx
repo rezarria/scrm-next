@@ -30,6 +30,10 @@ export default function Page () {
 					fullName: fullName.current!.get(),
 					avatar: avatar.current!.get(),
 					background: background.current!.get()
+				}).then(r => {
+					if (r.status === 200) {
+						currentUserContext?.updateInfo()
+					}
 				})
 			}}>Lưu
 			</button>

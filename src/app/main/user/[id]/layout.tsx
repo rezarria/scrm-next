@@ -38,7 +38,7 @@ export default function Layout (props: Props) {
 			}).catch(_ => {
 				setError(true)
 			})
-	}, [props.params.id])
+	}, [myInfo])
 
 	return <div className='w-full h-full'>
 		{error ?
