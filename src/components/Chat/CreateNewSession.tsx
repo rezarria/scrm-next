@@ -48,10 +48,11 @@ export default function CreateNewSession (props: Props) {
 }
 
 function FriendItem ({data, onClick}: { data: FriendInfo, onClick?: Function }) {
+	let userInfo = useContext(CurrentUserInfoContext)
 	return (
 		<div key={data.id} className='flex flex-row gap-2 rounded bg-white p-2 cursor-pointer' onClick={event => {
-			axios.post('http://localhost:8080/api/user/friend/createSession', {
-				users: [data.id]
+			axios.post('http://localhost:8080/api/user/chat/createSession', {
+				users: [data.id, userInfo!.user.id]
 			}).then(value => {
 				if (onClick !== undefined) onClick()
 			})
