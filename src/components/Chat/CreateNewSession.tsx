@@ -1,7 +1,7 @@
 'use client'
 
 import {useContext, useEffect, useRef, useState} from 'react'
-import UserInfoContext from '@/context/userInfoContext'
+import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import {getFriends} from '@/utils/function'
 import FriendInfo from '@/model/FriendInfo'
 import Image from 'next/image'
@@ -13,7 +13,7 @@ interface Props {
 
 export default function CreateNewSession (props: Props) {
 	const [friends, setFriends] = useState<FriendInfo[]>([])
-	let userInfo = useContext(UserInfoContext)
+	let userInfo = useContext(CurrentUserInfoContext)
 	let modal = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {

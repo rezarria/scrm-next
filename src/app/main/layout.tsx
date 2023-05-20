@@ -3,8 +3,8 @@
 import TopNavigator from '@/components/TopNavigator'
 import SearchBar from '@/components/SearchBar'
 import MenuSide, {MenuSideProps} from '@/components/MenuSide'
-import {ReactNode, useContext, useEffect, useRef, useState} from 'react'
-import UserInfoContext from '@/context/userInfoContext'
+import {ReactNode, useContext, useRef} from 'react'
+import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import PrivateRoute from '@/router/PrivateRoute'
 import UserInfo from '@/model/UserInfo'
 import {useRouter} from 'next/navigation'
@@ -34,7 +34,6 @@ export default function RootLayout ({
 									}: {
 	children: ReactNode
 }) {
-	const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
 	const users = useRef<UserInfo[]>([])
 	const job = useRef<{ task: Promise<UserInfo | null | undefined> | null }>({task: null})
 	let userContextValue: UserContextState = {
@@ -73,36 +72,29 @@ export default function RootLayout ({
 		}
 	}
 
-
-	useEffect(() => {
-		setUserInfo(JSON.parse(localStorage.getItem('user info') ?? '{}') as UserInfo)
-	}, [])
-
 	thietLapAxios()
 
 	return (
 		<PrivateRoute>
 			<UserContext.Provider value={userContextValue}>
-				<UserInfoContext.Provider value={userInfo}>
-					<div className='bg-blue-400 min-h-screen relative'>
-						<TopNavigator leftChildren={<GoMain/>} centerChildren={<SearchBar/>} rightChildren={
-							<Notification/>}/>
-						<div className='flex flex-row justify-center min-h-screen box-border pt-10'>
-							<Left/>
-							<Center>
-								{children}
-							</Center>
-							<Right/>
-						</div>
+				<div className='bg-blue-400 min-h-screen relative'>
+					<TopNavigator leftChildren={<GoMain/>} centerChildren={<SearchBar/>} rightChildren={
+						<Notification/>}/>
+					<div className='flex flex-row justify-center min-h-screen box-border pt-10'>
+						<Left/>
+						<Center>
+							{children}
+						</Center>
+						<Right/>
 					</div>
-				</UserInfoContext.Provider>
+				</div>
 			</UserContext.Provider>
 		</PrivateRoute>
 	)
 }
 
 function Left () {
-	const userInfo = useContext(UserInfoContext)
+	const userInfo = useContext(CurrentUserInfoContext)
 	const router = useRouter()
 
 	const props: MenuSideProps = {
@@ -111,10 +103,10 @@ function Left () {
 
 	if (userInfo !== null) {
 		props.items?.push({
-			icon: userInfo.avatar,
-			title: userInfo.fullName,
+			icon: userInfo.user.avatar,
+			title: userInfo.user.fullName,
 			onClick: () => {
-				router.push(`./user/${userInfo.id}`)
+				router.push(`./user/${userInfo.user.id}`)
 			}
 		})
 	}

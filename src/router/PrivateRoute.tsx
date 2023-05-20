@@ -3,7 +3,7 @@
 import {ReactNode, useEffect, useState} from 'react'
 import {useRouter as userRouterNavigation} from 'next/navigation'
 import axios from 'axios'
-import UserInfoContext from '@/context/userInfoContext'
+import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import UserInfo from '@/model/UserInfo'
 
 export interface Response {
@@ -24,14 +24,13 @@ function PrivateRoute (props: PrivateRouteProps) {
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
 	const navigation = userRouterNavigation()
 
-
 	useEffect(() => {
+		setUserInfo(JSON.parse(localStorage.getItem('user info') ?? '{}') as UserInfo)
 		let jwtStr: string | null = null
 		if (typeof window !== 'undefined') {
 			jwtStr = localStorage.getItem('jwt')
 			if (jwtStr === null) navigation.push(`/login?returnUrl=${window.location.pathname}`)
 		}
-
 		if (jwtStr !== null) {
 			axios.defaults.headers.common.Authorization = 'Bearer ' + jwtStr
 			let lastUpdate = localStorage.getItem('last update')
@@ -57,9 +56,12 @@ function PrivateRoute (props: PrivateRouteProps) {
 			return <>Đăng kiểm tra thông tin đăng nhập...</>
 		case Status.DONE:
 			return <>
-				<UserInfoContext.Provider value={userInfo}>
+				<CurrentUserInfoContext.Provider value={{
+					user: userInfo!,
+					setUser: setUserInfo
+				}}>
 					{props.children}
-				</UserInfoContext.Provider>
+				</CurrentUserInfoContext.Provider>
 			</>
 		case Status.ERROR:
 			return <>SOMETHING WRONG...</>

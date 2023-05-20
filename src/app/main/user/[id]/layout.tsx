@@ -3,7 +3,7 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from 'react'
 import UserInfo from '@/model/UserInfo'
 import {useRouter} from 'next/navigation'
-import UserInfoContext from '@/context/userInfoContext'
+import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import axios from 'axios'
 import Button from '@/components/Button'
 import UserHome from '@/components/UserHome'
@@ -25,11 +25,11 @@ export default function Layout (props: Props) {
 	const [self, setSelf] = useState(true)
 	const [error, setError] = useState(false)
 	const router = useRouter()
-	let myInfo = useContext(UserInfoContext)
+	let myInfo = useContext(CurrentUserInfoContext)
 	useEffect(() => {
 		if (myInfo === null) throw 'userinfo null'
-		if (myInfo.id === props.params.id) {
-			setUserinfo(myInfo)
+		if (myInfo.user.id === props.params.id) {
+			setUserinfo(myInfo.user)
 			setSelf(false)
 		} else
 			axios.get(`http://localhost:8080/api/user/info?id=${props.params.id}`).then(r => {

@@ -1,11 +1,11 @@
 import {useContext, useEffect, useState} from 'react'
-import UserInfoContext from '@/context/userInfoContext'
+import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import {default as PostModel} from '@/model/Post'
 import axios from 'axios'
 import Post from '@/components/Post'
 
 export default function PostList () {
-	const userInfo = useContext(UserInfoContext)
+	const userInfo = useContext(CurrentUserInfoContext)
 	const [oldestTime, setOldestTime] = useState(new Date().toISOString())
 	const [posts, setPosts] = useState<PostModel[]>([])
 

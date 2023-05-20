@@ -2,13 +2,13 @@
 
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import {useContext, useEffect, useRef, useState} from 'react'
-import UserInfoContext from '@/context/userInfoContext'
+import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import axios from 'axios'
 import {default as NotificationModel} from '@/model/Notification'
 import NotificationItem from '@/components/NotificationItem'
 
 export default function Notification () {
-	const userInfo = useContext(UserInfoContext)
+	const userInfo = useContext(CurrentUserInfoContext)
 	const [notification, setNotification] = useState<NotificationModel[]>([])
 	let startTime = useRef(new Date().toISOString())
 	let endTime = useRef(new Date().toISOString())

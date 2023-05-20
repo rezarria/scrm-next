@@ -3,15 +3,20 @@
 import Style from './style.module.scss'
 import {forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState} from 'react'
 import UserInfo from '@/model/UserInfo'
-import userInfoContext from '@/context/userInfoContext'
+import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import axios from 'axios'
+import Image from 'next/image'
 
 export default function Page () {
-	const [userInfo, setUserInfo] = useState<UserInfo | null>(useContext(userInfoContext))
+	let currentUserContext = useContext(CurrentUserInfoContext)
+	const [userInfo, setUserInfo] = useState<UserInfo | null>(currentUserContext?.user ?? null)
 	let fullName = useRef<InputRef>(null)
 	let avatar = useRef<InputRef>(null)
 	let background = useRef<InputRef>(null)
-
+	let thongBaoRef = useRef<ThongBaoRef>(null)
+	useEffect(() => {
+		thongBaoRef.current!.show(true)
+	}, [])
 
 	if (userInfo === null) return <div>Loading....</div>
 
@@ -28,13 +33,13 @@ export default function Page () {
 				})
 			}}>Lưu
 			</button>
-			<ThongBao/>
+			<ThongBao ref={thongBaoRef}/>
 		</div>
 	)
 }
 
 type ThongBaoRef = {
-	show: (n: number) => void
+	show: (status: boolean, n?: number) => void
 }
 
 type ThongBaoProps = {}
@@ -42,13 +47,24 @@ type ThongBaoProps = {}
 // eslint-disable-next-line react/display-name
 const ThongBao = forwardRef<ThongBaoRef, ThongBaoProps>((props, ref) => {
 	const [status, setStatus] = useState(false)
+	const [show, setShow] = useState(false)
 
-	// useImperativeHandle(ref, () => ({
-	// }))
+	useImperativeHandle(ref, () => ({
+		show: (status, n) => {
+			if (n === undefined) n = 5000
+			setShow(true)
+			setStatus(status)
+			setTimeout(args => {
+				setShow(false)
+			}, n)
+		}
+	}))
+
+	let classes = show ? '' : 'hidden'
 
 	if (status)
-		return <div className='bg-green-600 p-2 text-center text-white font-bold rounded'>Thành công</div>
-	else return <div className='bg-red-600 p-2 text-center text-white font-bold rounded'>Thất bại</div>
+		return <div className={`bg-green-600 p-2 text-center text-white font-bold rounded ${classes}`}>Thành công</div>
+	else return <div className={`bg-red-600 p-2 text-center text-white font-bold rounded ${classes}`}>Thất bại</div>
 })
 
 
@@ -89,6 +105,8 @@ const ImageInput = forwardRef<InputRef, InputProps>(
 	(props, ref) => {
 		let file = useRef<HTMLInputElement>(null)
 		let value = useRef<HTMLInputElement>(null)
+		const [url, setUrl] = useState(props.init)
+
 		useImperativeHandle(ref, () => ({
 			get: () => {
 				return value.current!.value
@@ -99,36 +117,44 @@ const ImageInput = forwardRef<InputRef, InputProps>(
 			value.current!.value = props.init
 		}, [])
 
-		console.log('reload!')
 		return (
 			<div className={Style.inputGroup}>
 				<label>{props.title}</label>
-				<div className={Style.groupFile}>
-					<input ref={file} type='file' className='hidden' onChange={event => {
-						if (file.current) {
-							let f = file.current
-							if (f.files) {
-								let form = new FormData()
-								form.append('files', f.files[0])
-								axios.post('http://localhost:8080/api/user/picture/upload', form)
-									.then(r => {
-										if (r.status === 200) {
-											value.current!.value = 'http://localhost:8080/api/picture/get/' + r.data[0]['second']
-										}
-									})
+				<div className='flex flex-col'>
+					<div className={Style.groupFile}>
+						<input ref={file} type='file' className='hidden' onChange={event => {
+							if (file.current) {
+								let f = file.current
+								if (f.files) {
+									let form = new FormData()
+									form.append('files', f.files[0])
+									axios.post('http://localhost:8080/api/user/picture/upload', form)
+										.then(r => {
+											if (r.status === 200) {
+												value.current!.value = 'http://localhost:8080/api/picture/get/' + r.data[0]['second']
+											}
+										})
+								}
 							}
-						}
-					}}/>
-					<button onClick={event => {
-						if (file.current) {
-							let f = file.current
-							f.click()
-						}
-					}}>chọn ảnh
-					</button>
-					<input ref={value} type='text'/>
+						}}/>
+						<button onClick={event => {
+							if (file.current) {
+								let f = file.current
+								f.click()
+							}
+						}}>chọn ảnh
+						</button>
+						<input ref={value} type='text' onChange={event => setUrl(event.target.value)}/>
+					</div>
+					{
+						url.length !== 0 &&
+						<Image className='border p-1 max-h-48 object-cover' src={url} width={300}
+							   height={300} alt={''}/>
+					}
 				</div>
+
 			</div>
+
 		)
 	}
 )
