@@ -1,10 +1,10 @@
 'use client'
 
 import NotificationsIcon from '@mui/icons-material/Notifications'
-import {useContext, useEffect, useRef, useState} from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import axios from 'axios'
-import {default as NotificationModel} from '@/model/Notification'
+import { default as NotificationModel } from '@/model/Notification'
 import NotificationItem from '@/components/NotificationItem'
 
 export default function Notification () {

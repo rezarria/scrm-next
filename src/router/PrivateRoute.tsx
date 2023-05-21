@@ -1,7 +1,7 @@
 'use client'
 
-import {ReactNode, useEffect, useState} from 'react'
-import {useRouter as userRouterNavigation} from 'next/navigation'
+import { ReactNode, useEffect, useState } from 'react'
+import { useRouter as userRouterNavigation } from 'next/navigation'
 import axios from 'axios'
 import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import UserInfo from '@/model/UserInfo'

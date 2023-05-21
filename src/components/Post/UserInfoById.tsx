@@ -1,7 +1,7 @@
-import {ReactNode, useContext, useEffect, useState} from 'react'
+import { ReactNode, useContext, useEffect, useState } from 'react'
 import UserContext from '@/context/UserContext'
 import UserInfo from './UserInfo'
-import {default as UserInfoModel} from '@/model/UserInfo'
+import { default as UserInfoModel } from '@/model/UserInfo'
 
 function UserInfoById (props: { id: string, underName?: ReactNode }) {
 	const context = useContext(UserContext)

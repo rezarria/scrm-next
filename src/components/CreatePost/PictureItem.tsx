@@ -1,5 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close'
-import {useEffect, useRef} from 'react'
+import { useEffect, useRef } from 'react'
 
 interface Props {
 	src?: string

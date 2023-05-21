@@ -1,5 +1,5 @@
-import Notification, {Mode} from '@/model/Notification'
-import {useContext, useEffect, useState} from 'react'
+import Notification, { Mode } from '@/model/Notification'
+import { useContext, useEffect, useState } from 'react'
 import UserContext from '@/context/UserContext'
 import UserInfo from '@/model/UserInfo'
 import axios from 'axios'

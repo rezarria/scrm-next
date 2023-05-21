@@ -1,5 +1,5 @@
 import PictureItem from '@/components/CreatePost/PictureItem'
-import {ForwardedRef, forwardRef, useImperativeHandle, useState} from 'react'
+import { ForwardedRef, forwardRef, useImperativeHandle, useState } from 'react'
 
 export type Props = {}
 

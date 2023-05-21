@@ -1,10 +1,10 @@
 'use client'
 
-import {ReactNode} from 'react'
+import { ReactNode } from 'react'
 import ChatSessionList from '@/components/Chat/ChatSessionList'
 import CreateNewSession from '@/components/Chat/CreateNewSession'
 import PrivateRoute from '@/router/PrivateRoute'
-import {UserContextProvider} from '@/context/UserContext'
+import { UserContextProvider } from '@/context/UserContext'
 
 interface Props {
 	children: ReactNode

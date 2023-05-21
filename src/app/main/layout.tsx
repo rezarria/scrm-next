@@ -2,14 +2,14 @@
 
 import TopNavigator from '@/components/TopNavigator'
 import SearchBar from '@/components/SearchBar'
-import MenuSide, {MenuSideProps} from '@/components/MenuSide'
-import {ReactNode, useContext} from 'react'
+import MenuSide, { MenuSideProps } from '@/components/MenuSide'
+import { ReactNode, useContext } from 'react'
 import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import PrivateRoute from '@/router/PrivateRoute'
-import {useRouter} from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import GoMain from '@/components/GoMain'
-import {UserContextProvider} from '@/context/UserContext'
+import { UserContextProvider } from '@/context/UserContext'
 import Notification from '@/components/Notification'
 
 function thietLapAxios () {

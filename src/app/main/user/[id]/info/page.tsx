@@ -1,7 +1,7 @@
 'use client'
 
 import Style from './style.module.scss'
-import {forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState} from 'react'
+import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import UserInfo from '@/model/UserInfo'
 import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import axios from 'axios'
@@ -152,8 +152,8 @@ const ImageInput = forwardRef<InputRef, InputProps>(
 					</div>
 					{
 						url.length !== 0 &&
-						<Image className='border p-1 max-h-48 object-cover' src={url} width={300}
-							   height={300} alt={''}/>
+                        <Image className='border p-1 max-h-48 object-cover' src={url} width={300}
+                               height={300} alt={''}/>
 					}
 				</div>
 			</div>

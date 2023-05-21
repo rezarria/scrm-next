@@ -1,9 +1,10 @@
 'use client'
 
-import {useContext, useEffect, useState} from 'react'
+import { useContext, useEffect, useState } from 'react'
 import UserContext from '@/context/UserContext'
 import UserInfo from '@/model/UserInfo'
 import Image from 'next/image'
+import Chat from '@/model/Chat'
 
 interface Props {
 	name: string
@@ -15,7 +16,8 @@ export default function ChatSessionItem (props: Props) {
 	return <div className='flex flex-row gap-2 p-2 cursor-pointer rounded-r hover:bg-blue-400'>
 		<div className='rounded-full w-12 h-12 bg-black overflow-hidden'>
 			{
-				props.avatar != null && props.avatar.length != 0 && <Image className='w-full h-full object-cover' src={props.avatar} alt='avatar' width='300' height='300'/>
+				props.avatar != null && props.avatar.length != 0 &&
+                <Image className='w-full h-full object-cover' src={props.avatar} alt='avatar' width='300' height='300'/>
 			}
 		</div>
 		<div className='flex-col'>
@@ -27,6 +29,7 @@ export default function ChatSessionItem (props: Props) {
 
 interface ChatSessionItemByIdProps {
 	id: string
+	session: Chat
 }
 
 export function ChatSessionItemById (props: ChatSessionItemByIdProps) {

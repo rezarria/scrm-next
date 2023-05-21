@@ -1,12 +1,12 @@
 'use client'
 
 import styles from './styles.module.scss'
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import PersonIcon from '@mui/icons-material/Person'
 import PasswordIcon from '@mui/icons-material/Password'
 import background from './bg-login.jpg'
 import axios from 'axios'
-import {useRouter as useRouterNativation, useSearchParams} from 'next/navigation'
+import { useRouter as useRouterNativation, useSearchParams } from 'next/navigation'
 
 interface Props {
 }

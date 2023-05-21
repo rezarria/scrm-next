@@ -1,6 +1,6 @@
 'use client'
 
-import {useRouter} from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import PostList from '@/components/PostList'
 import CreatePost from '@/components/CreatePost'
 

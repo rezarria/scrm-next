@@ -1,6 +1,6 @@
 import '../globals.css'
-import {ReactNode} from 'react'
-import {WithRouterProps} from 'next/dist/client/with-router'
+import { ReactNode } from 'react'
+import { WithRouterProps } from 'next/dist/client/with-router'
 
 export const metadata = {
 	title: 'Create Next App',

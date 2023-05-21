@@ -1,5 +1,5 @@
 import HomeIcon from '@mui/icons-material/Home'
-import {useRouter} from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export default function GoMain () {
 	const router = useRouter()

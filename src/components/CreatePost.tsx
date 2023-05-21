@@ -1,9 +1,9 @@
 'use client'
 
-import {useEffect, useRef, useState} from 'react'
+import { useEffect, useRef, useState } from 'react'
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate'
 import axios from 'axios'
-import {default as PictureSection, PictureSectionRef} from '@/components/CreatePost/PictureSection'
+import { default as PictureSection, PictureSectionRef } from '@/components/CreatePost/PictureSection'
 
 export default function CreatePost () {
 	const nutH = useRef<HTMLDivElement>(null)

@@ -1,9 +1,9 @@
 'use client'
 
 import PostList from '@/components/PostList'
-import {useContext} from 'react'
-import {homeUserInfo} from '@/app/main/user/[id]/layout'
-import {useRouter} from 'next/navigation'
+import { useContext } from 'react'
+import { homeUserInfo } from '@/app/main/user/[id]/layout'
+import { useRouter } from 'next/navigation'
 
 interface PageProps {
 	params: {

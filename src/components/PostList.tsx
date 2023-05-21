@@ -1,6 +1,6 @@
-import {useContext, useEffect, useState} from 'react'
+import { useContext, useEffect, useState } from 'react'
 import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
-import {default as PostModel} from '@/model/Post'
+import { default as PostModel } from '@/model/Post'
 import axios from 'axios'
 import Post from '@/components/Post'
 

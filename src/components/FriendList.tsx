@@ -1,9 +1,10 @@
 'use client'
 
-import {useEffect, useState} from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import Image from 'next/image'
 import NutHuyKetBan from '@/components/FriendList/NutHuyKetBan'
+import { useRouter } from 'next/navigation'
 
 interface Props {
 	id: string
@@ -17,6 +18,16 @@ interface FriendInfo {
 
 export default function FriendList (props: Props) {
 	const [friendInfo, setFriendInfo] = useState<FriendInfo[]>([])
+	const router = useRouter()
+	const onClick = useCallback((
+			(id: string) => {
+				return () => {
+					router.push(`/user/${id}`)
+				}
+			}
+		)
+		, [])
+
 	useEffect(() => {
 		axios.get<FriendInfo[]>(`http://localhost:8080/api/user/friend/list?id=${props.id}`)
 			.then(r => {
@@ -36,12 +47,13 @@ export default function FriendList (props: Props) {
 					friendInfo.map(u => (
 						<div key={u.id}
 							 className='group flex flex-row gap-4 hover:rounded hover:bg-blue-500 p-2 duration-300 hover:duration-200'>
-							<div className='rounded-full bg-black w-16 h-16 overflow-hidden cursor-pointer'>
+							<div onClick={onClick(u.id)}
+								 className='rounded-full bg-black w-16 h-16 overflow-hidden cursor-pointer'>
 								{
 									u.avatar && <Image src={u.avatar} width='100' height='100' alt='avatar'/>
 								}
 							</div>
-							<div className='flex flex-col'>
+							<div onClick={onClick(u.id)} className='flex flex-col'>
 								<div className='text-2xl group-hover:text-white cursor-pointer'>{u.fullName}</div>
 								<div
 									className='text-neutral-500 text-xs cursor-pointer group-hover:text-black'>@{u.id}</div>
@@ -53,7 +65,6 @@ export default function FriendList (props: Props) {
 					))
 				}
 			</div>
-
 		</div>
 	)
 }

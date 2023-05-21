@@ -1,4 +1,4 @@
-import {default as PostModel} from '@/model/Post'
+import { default as PostModel } from '@/model/Post'
 import UserInfoById from '@/components/Post/UserInfoById'
 import StatusZoneById from '@/components/Post/StatusZoneById'
 
