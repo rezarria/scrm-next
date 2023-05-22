@@ -5,6 +5,9 @@ import { useContext, useEffect, useState } from 'react'
 import userContext from '@/context/UserContext'
 import UserInfo from '@/model/UserInfo'
 import { InputArea } from '@/components/Chat/InputArea'
+import ChatSessionContext from '@/context/ChatSessionContext'
+import Chat from '@/model/Chat'
+import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 
 interface PageProps {
 	params: {
@@ -20,29 +23,41 @@ function Header ({name}: { name: string }) {
 }
 
 export default function Page (props: PageProps) {
-	const context = useContext(userContext)
+	const userInfoContext = useContext(userContext)
+	const currentUser = useContext(CurrentUserInfoContext)
+	const sessionContext = useContext(ChatSessionContext)
 	const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
-	useEffect(() => {
-		context?.getUser(props.params.id).then(u => {
-			if (u != null) {
-				setUserInfo(u)
-			}
-		})
-	}, [props.params.id])
+	const [session, setSession] = useState<Chat>()
+	const [loading, setLoading] = useState(true)
 
-	if (userInfo === null) return <h1>Loading...</h1>
+	useEffect(() => {
+		if (sessionContext != null) {
+			sessionContext.getSession(props.params.id).then(d => {
+				if (d != null) {
+					setSession(d)
+					if (userInfoContext && currentUser) {
+						userInfoContext.getUser(d.users.filter(i => i.localeCompare(currentUser.user.id))[0])
+							.then(u => {
+								if (u) {
+									setUserInfo(u)
+									setLoading(false)
+								}
+							})
+					}
+				}
+			})
+		}
+	}, [props.params.id, sessionContext])
+
+	if (loading) return <h1>Loading...</h1>
 
 	return (
 		<div className='flex flex-col h-full'>
-			<Header name={userInfo.fullName}/>
+			<Header name={userInfo!.fullName}/>
 			<div className='flex flex-col flex-grow h-[400px]'>
-				<div className='flex-grow relative overflow-y-scroll'>
-					<div className='overflow-hidden h-max absolute top-0 left-0 w-full'>
-						<ChatSessionContent id={props.params.id}/>
-					</div>
-				</div>
+				<ChatSessionContent session={session!}/>
 				<div className='p-2 min-h-fit border-t'>
-					<InputArea ids={[props.params.id]}/>
+					<InputArea id={props.params.id}/>
 				</div>
 			</div>
 		</div>

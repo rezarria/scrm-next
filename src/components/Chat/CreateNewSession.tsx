@@ -24,25 +24,25 @@ export default function CreateNewSession (props: Props) {
 
 	return <>
 		{userInfo && <>
-            <div className='group m-2 text-center border rounded cursor-pointer hover:bg-blue-400 duration-300'
-                 onClick={event => {
+			<div className='group m-2 text-center border rounded cursor-pointer hover:bg-blue-400 duration-300'
+				 onClick={event => {
 					 modal.current?.classList.toggle('hidden')
 				 }}>
-                <span className='group-hover:text-white duration-100 text-xl'>+</span>
-            </div>
-            <div ref={modal} className='fixed h-screen w-screen z-10 flex justify-center items-center hidden'>
-                <div className='absolute w-screen h-screen bg-white/50 top-0 left-0 -z-10' onClick={event => {
+				<span className='group-hover:text-white duration-100 text-xl'>+</span>
+			</div>
+			<div ref={modal} className='fixed h-screen w-screen z-10 flex justify-center items-center hidden'>
+				<div className='absolute w-screen h-screen bg-white/50 top-0 left-0 -z-10' onClick={event => {
 					modal.current?.classList.add('hidden')
 				}}></div>
-                <div className='bg-blue-400 p-2 rounded flex flex-col gap-2'>
-                    <div className='rounded border'><input type='text' className='focus:outline-0 p-1'
-                                                           placeholder='tên người dùng'/></div>
-                    <div className='flex flex-col gap-2'>
+				<div className='bg-blue-400 p-2 rounded flex flex-col gap-2'>
+					<div className='rounded border'><input type='text' className='focus:outline-0 p-1'
+														   placeholder='tên người dùng'/></div>
+					<div className='flex flex-col gap-2'>
 						{friends.map(k => <FriendItem key={k.id} data={k}/>)}
-                    </div>
-                </div>
-            </div>
-        </>
+					</div>
+				</div>
+			</div>
+		</>
 		}
 	</>
 }

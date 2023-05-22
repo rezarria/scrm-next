@@ -4,25 +4,31 @@ import { ChatSessionItemById } from '@/components/Chat/ChatSessionItem'
 import Styles from './ChatSessionList.module.scss'
 import { useContext, useEffect, useState } from 'react'
 import Chat from '@/model/Chat'
-import axios from 'axios'
 import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import { useRouter } from 'next/navigation'
+import ChatSessionContext from '@/context/ChatSessionContext'
 
 export default function ChatSessionList () {
 	const [chats, setChats] = useState<Chat[]>([])
+	const sessionContext = useContext(ChatSessionContext)
 	const curentUser = useContext(CurrentUserInfoContext)
 	const router = useRouter()
+	const [load, setLoad] = useState(true)
+
 	useEffect(() => {
-		axios.get<Chat[]>('http://localhost:8080/api/user/chat/getAllSession')
-			.then(r => {
-				if (r.status === 200) {
-					setChats(r.data)
-				}
-			})
-	}, [])
+		const callback = () => {
+			console.log('render!')
+			setLoad(!load)
+			setChats(sessionContext!.getAll())
+		}
+		sessionContext!.subscribe(callback)
+		return () => {
+			sessionContext!.unsubscribe(callback)
+		}
+	}, [sessionContext])
 
 	let list = chats.map(t => {
-		let id = t.users.filter(i => i.localeCompare(curentUser!.user!.id))[0]
+		let id = t.id
 		return (
 			<div key={t.id} onClick={() => {
 				router.push(`/chat/${id}`)

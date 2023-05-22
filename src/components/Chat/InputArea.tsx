@@ -1,9 +1,8 @@
 interface Props {
-	ids: string[]
+	id: string
 }
 
 export function InputArea (props: Props) {
-	let ids = props.ids.sort()
 	return <>
 		<div className='flex flex-row'>
 			<div className='flex-grow'>

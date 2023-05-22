@@ -5,6 +5,7 @@ interface Chat {
 	messages: string[]
 	pictures: string[]
 	videos: string[]
+	lastModifiedDate: string
 }
 
 export default Chat
