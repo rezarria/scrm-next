@@ -6,6 +6,6 @@ export default interface ChatMessage {
 	videos: string[]
 	details: string[]
 	content: string
-	createDate: string
+	lastModifiedDate:string
 	createBy: string
 }

@@ -3,7 +3,7 @@ import UserInfo from '@/model/UserInfo'
 import userContext from '@/context/UserContext'
 import currentUserInfoContext from '@/context/CurrentUserInfoContext'
 import { ChatMessageContextWrapper } from '@/context/ChatMessageContext'
-import ChatMessageList from '@/context/ChatMessageList'
+import ChatMessageList from '@/components/Chat/ChatMessageList'
 import Chat from '@/model/Chat'
 
 interface Props {
