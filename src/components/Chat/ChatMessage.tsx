@@ -31,13 +31,13 @@ export default function ChatMessage (props: Props) {
 		<div className={`flex flex-row gap-2 ${props.left ? 'justify-start' : 'flex-row-reverse'}`}>
 			{
 				!(props.showAvatar !== undefined && !props.showAvatar) &&
-				<div className='rounded-full w-8 h-8 bg-black overflow-hidden'>
+                <div className='rounded-full w-8 h-8 bg-black overflow-hidden'>
 					{
 						userInfo!.avatar != null && userInfo!.avatar.length != 0 &&
-						<Image className='w-full h-full object-cover' width={50} height={50} src={userInfo!.avatar}
-							   alt='avatar'/>
+                        <Image className='w-full h-full object-cover' width={50} height={50} src={userInfo!.avatar}
+                               alt='avatar'/>
 					}
-				</div>
+                </div>
 			}
 			<div className='rounded bg-white p-2 max-w-[40%] border'>
 				<p className='w-full break-words'>{props.content}</p>

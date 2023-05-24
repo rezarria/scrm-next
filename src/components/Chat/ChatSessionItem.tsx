@@ -18,7 +18,7 @@ export default function ChatSessionItem (props: Props) {
 		<div className='rounded-full w-12 h-12 bg-black overflow-hidden'>
 			{
 				props.avatar != null && props.avatar.length != 0 &&
-				<Image className='w-full h-full object-cover' src={props.avatar} alt='avatar' width='300' height='300'/>
+                <Image className='w-full h-full object-cover' src={props.avatar} alt='avatar' width='300' height='300'/>
 			}
 		</div>
 		<div className='flex-col'>

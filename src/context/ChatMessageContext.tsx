@@ -1,12 +1,12 @@
-import {createContext, ReactNode, useEffect, useRef} from 'react'
+import { createContext, ReactNode, useEffect, useRef } from 'react'
 import axios from 'axios'
-import Chat from '@/model/Chat'
 import ChatMessage from '@/model/ChatMessage'
 
 export interface ChatMessageState {
 	getAll: () => ChatMessage[]
 	getMessage: (id: string) => Promise<ChatMessage | null | undefined>
-	update: () => Promise<void>
+	getTime: () => string
+	update: () => Promise<boolean>
 	subscribe: (callback: Function) => void
 	unsubscribe: (callback: Function) => void
 }
@@ -43,14 +43,21 @@ export function ChatMessageContextProvider (props: ChatMessageContextProviderPro
 					if (newEndTime > endTime.current) endTime.current = newEndTime
 					let ids = r.data.map(i => i.id)
 					messageSessions.current = r.data.concat(messageSessions.current.filter(i => !ids.includes(i.id))).sort((a, b) => b.lastModifiedDate.localeCompare(a.lastModifiedDate))
-					subscribers.current.forEach(t => t())
+					return Promise.resolve(true)
 				}
 			}
+			return Promise.resolve(false)
 		})
 	}
 
 	const updateTimeout = () => {
-		update().then(r => setTimeout(updateTimeout, 5000))
+		update().then(r => {
+			subscribers.current.forEach(t => {
+				console.log(`${t.name} đã thực thi`)
+				t()
+			})
+			setTimeout(updateTimeout, 300)
+		})
 	}
 
 	useEffect(() => {
@@ -59,6 +66,7 @@ export function ChatMessageContextProvider (props: ChatMessageContextProviderPro
 
 
 	let chatMessageContextValue: ChatMessageState = {
+		getTime: () => startTime.current.toString() + endTime.current.toString(),
 		getAll: () => messageSessions.current,
 		subscribe: callback => {
 			subscribers.current.push(callback)

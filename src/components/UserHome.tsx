@@ -13,14 +13,14 @@ export default function UserHome (props: UserHomeProps) {
 		<div className='bg-neutral-300'>
 			<div className='h-[300px] bg-amber-200'>
 				{props.userInfo.background &&
-					<Image src={props.userInfo.background} width='2000' height='2000' alt='background'
-						   className='h-full object-cover object-top'/>}
+                    <Image src={props.userInfo.background} width='2000' height='2000' alt='background'
+                           className='h-full object-cover object-top'/>}
 			</div>
 			<div className='flex flex-row items-stretch gap-5 -top-10 relative px-14'>
 				<div
 					className='rounded-full bg-black w-56 h-56 overflow-hidden border-2 border-opacity-40 border-blue-400'>
 					{props.userInfo.avatar && <Image src={props.userInfo.avatar} width='300' height='300' alt='avatar'
-													 className='w-full h-full object-cover object-top'/>}
+                                                     className='w-full h-full object-cover object-top'/>}
 				</div>
 				<div className='flex flex-col justify-end'>
 					<div className='text-4xl'>{props.userInfo.fullName}</div>
