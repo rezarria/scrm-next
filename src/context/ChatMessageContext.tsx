@@ -1,7 +1,7 @@
-import { createContext, ReactNode, useEffect, useRef } from 'react'
+import {createContext, ReactNode, useEffect, useRef} from 'react'
 import axios from 'axios'
 import Chat from '@/model/Chat'
-import ChatMessage from "@/model/ChatMessage";
+import ChatMessage from '@/model/ChatMessage'
 
 export interface ChatMessageState {
 	getAll: () => ChatMessage[]
@@ -17,10 +17,11 @@ export default ChatMessageContext
 
 
 interface ChatMessageContextProviderProps {
+	id: string
 	children: ReactNode
 }
 
-export function ChatSessionContextProvider (props: ChatMessageContextProviderProps) {
+export function ChatMessageContextProvider (props: ChatMessageContextProviderProps) {
 	const messageSessions = useRef<ChatMessage[]>([])
 	const job = useRef<{ task: Promise<ChatMessage | null | undefined> | null }>({task: null})
 	const subscribers = useRef<Function[]>([])
@@ -29,6 +30,7 @@ export function ChatSessionContextProvider (props: ChatMessageContextProviderPro
 	const update = () => {
 		return axios.get<ChatMessage[]>('http://localhost:8080/api/user/chat/getMessages', {
 			params: {
+				id: props.id,
 				startTime: startTime.current.toISOString(),
 				endTime: endTime.current.toISOString()
 			}
@@ -56,7 +58,7 @@ export function ChatSessionContextProvider (props: ChatMessageContextProviderPro
 	}, [])
 
 
-	let userContextValue: ChatMessageState = {
+	let chatMessageContextValue: ChatMessageState = {
 		getAll: () => messageSessions.current,
 		subscribe: callback => {
 			subscribers.current.push(callback)
@@ -81,7 +83,7 @@ export function ChatSessionContextProvider (props: ChatMessageContextProviderPro
 				return session
 			}
 
-			job.current.task = axios.get<Chat>(`http://localhost:8080/api/user/chat/getSession?id=${id}`)
+			job.current.task = axios.get<ChatMessage>(`http://localhost:8080/api/user/chat/getSession?id=${id}`)
 				.then(r => {
 					if (r.status === 200) {
 						messageSessions.current.push(r.data)
@@ -96,7 +98,7 @@ export function ChatSessionContextProvider (props: ChatMessageContextProviderPro
 		}
 	}
 	return (
-		<ChatMessageContext.Provider value={userContextValue}>
+		<ChatMessageContext.Provider value={chatMessageContextValue}>
 			{
 				props.children
 			}
