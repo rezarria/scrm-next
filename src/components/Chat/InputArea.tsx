@@ -1,6 +1,8 @@
 import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
-import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import {useCallback, useContext, useEffect, useRef, useState} from 'react'
 import axios from 'axios'
+import UploadImage from '@/components/Chat/UploadImage'
+import ButtonInputArea from '@/components/Chat/ButtonInputArea'
 
 interface Props {
 	id: string
@@ -44,10 +46,7 @@ export function InputArea (props: Props) {
 			<button onClick={sendMessage} className='px-6 rounded border hover:bg-blue-200 duration-500'>Gửi</button>
 		</div>
 		<div className='flex flex-row gap-2'>
-			<button>Fn1</button>
-			<button>Fn2</button>
-			<button>Fn3</button>
-			<button>Fn3</button>
+			<ButtonInputArea/>
 		</div>
 	</>
 }

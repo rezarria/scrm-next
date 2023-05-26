@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useRef } from 'react'
+import {createContext, ReactNode, useEffect, useRef} from 'react'
 import axios from 'axios'
 import ChatMessage from '@/model/ChatMessage'
 
@@ -52,10 +52,12 @@ export function ChatMessageContextProvider (props: ChatMessageContextProviderPro
 
 	const updateTimeout = () => {
 		update().then(r => {
-			subscribers.current.forEach(t => {
-				console.log(`${t.name} đã thực thi`)
-				t()
-			})
+			if (r) {
+				subscribers.current.forEach(t => {
+					console.log(`${t.name} đã thực thi`)
+					t()
+				})
+			}
 			setTimeout(updateTimeout, 300)
 		})
 	}

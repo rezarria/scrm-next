@@ -4,12 +4,12 @@ import UserInfo from '@/model/UserInfo'
 import Image from 'next/image'
 import { useContext, useEffect, useState } from 'react'
 import UserContext from '@/context/UserContext'
+import {default as ChatMessageModel} from '@/model/ChatMessage'
 
 interface Props {
-	content: string
+	message:ChatMessageModel
 	left: boolean
 	showAvatar?: boolean
-	userId: string
 }
 
 export default function ChatMessage (props: Props) {
@@ -17,7 +17,7 @@ export default function ChatMessage (props: Props) {
 	const [loading, setLoading] = useState(true)
 	const [userInfo, setUserInfo] = useState<UserInfo>()
 	useEffect(() => {
-		userContext?.getUser(props.userId).then(u => {
+		userContext?.getUser(props.message.createBy).then(u => {
 			if (u != null) {
 				setUserInfo(u)
 				setLoading(false)
@@ -39,8 +39,11 @@ export default function ChatMessage (props: Props) {
 					}
                 </div>
 			}
-			<div className='rounded bg-white p-2 max-w-[40%] border'>
-				<p className='w-full break-words'>{props.content}</p>
+			<div className='peer/text rounded bg-white p-2 max-w-[40%] border'>
+				<p className='w-full break-words'>{props.message.content}</p>
+			</div>
+			<div className='rounded bg-blue-500 p-2 text-white hidden peer-hover/text:block'>
+				{new Date(props.message.lastModifiedDate).toLocaleString()}
 			</div>
 		</div>
 	)
