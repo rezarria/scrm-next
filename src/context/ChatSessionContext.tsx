@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useRef } from 'react'
+import { createContext, ReactNode, useEffect, useMemo, useRef } from 'react'
 import axios from 'axios'
 import Chat from '@/model/Chat'
 
@@ -55,45 +55,48 @@ export function ChatSessionContextProvider (props: ChatSessionContextProviderPro
 	}, [])
 
 
-	let userContextValue: ChatSessionState = {
-		getAll: () => chatSessions.current,
-		subscribe: callback => {
-			subscribers.current.push(callback)
-		},
-		unsubscribe: callback => {
-			const index = subscribers.current.indexOf(callback)
-			if (index != -1)
-				subscribers.current.splice(index, 1)
-		},
-		update: update,
-		getSession: async id => {
-			let session = chatSessions.current.find(x => x.id === id)
-			console.log(session)
-			if (session != null) return session
+	let userContextValue: ChatSessionState = useMemo(() => {
 
-			while (true) {
-				if (job.current.task !== null) {
-					await job.current.task
-				}
-				session = chatSessions.current.find(x => x.id === id)
-				if (session === undefined) break
-				return session
-			}
+		return {
+			getAll: () => chatSessions.current,
+			subscribe: callback => {
+				subscribers.current.push(callback)
+			},
+			unsubscribe: callback => {
+				const index = subscribers.current.indexOf(callback)
+				if (index != -1)
+					subscribers.current.splice(index, 1)
+			},
+			update: update,
+			getSession: async id => {
+				let session = chatSessions.current.find(x => x.id === id)
+				console.log(session)
+				if (session != null) return session
 
-			job.current.task = axios.get<Chat>(`http://localhost:8080/api/user/chat/getSession?id=${id}`)
-				.then(r => {
-					if (r.status === 200) {
-						chatSessions.current.push(r.data)
-						return r.data
+				while (true) {
+					if (job.current.task !== null) {
+						await job.current.task
 					}
-					return null
-				}).finally(() => {
-					job.current.task = null
-				})
+					session = chatSessions.current.find(x => x.id === id)
+					if (session === undefined) break
+					return session
+				}
 
-			return await job.current.task
+				job.current.task = axios.get<Chat>(`http://localhost:8080/api/user/chat/getSession?id=${id}`)
+					.then(r => {
+						if (r.status === 200) {
+							chatSessions.current.push(r.data)
+							return r.data
+						}
+						return null
+					}).finally(() => {
+						job.current.task = null
+					})
+
+				return await job.current.task
+			}
 		}
-	}
+	}, [])
 	return (
 		<ChatSessionContext.Provider value={userContextValue}>
 			{
