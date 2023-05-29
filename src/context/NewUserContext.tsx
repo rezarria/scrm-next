@@ -21,7 +21,7 @@ export default function createNewContext<T> () {
 				return Promise.resolve(cache.get(id))
 			} else if (queue.has(id)) {
 				return queue.get(id)!.then(d => {
-					if (typeof id === 'object') return d as T
+					if (typeof d === 'object') return d as T
 					else { // @ts-ignore
 						return (d as T[]).find(i => i.id === id) as T
 					}
@@ -38,7 +38,7 @@ export default function createNewContext<T> () {
 						return Promise.resolve(cache.get(id))
 					} else if (queue.has(id)) {
 						return await queue.get(id)!.then(d => {
-							if (typeof id === 'object') return d as T
+							if (typeof d === 'object') return d as T
 							else { // @ts-ignore
 								return (d as T[]).find(i => i.id === id) as T
 							}
@@ -62,13 +62,13 @@ export default function createNewContext<T> () {
 			if (missingIdList.length === 0) {
 				// @ts-ignore
 				return Promise.resolve(Array.from(cache.values()).filter(id => foundId.includes(id.id)))
-			} else if (Array.from(queue.keys()).every(id => missingIdList.includes(id))) {
+			} else if (missingIdList.every(i=>queue.has(i))) {
 				let queueIdList = Array.from(queue.keys()).filter(i => missingIdList.includes(i))
 				let queueList = queueIdList.map(id => queue.get(id))
 				return Promise.all(queueList).then(result => {
-					let chatList = result.filter(id => typeof id === 'object') as T[]
-					let chat2D = result.filter(id => Array.isArray(id)) as T[][]
-					let foundList = foundId.map(id => cache.get(id) as T)
+					let chatList = result.filter(data => typeof data === 'object') as T[]
+					let chat2D = result.filter(data => Array.isArray(data)) as T[][]
+					let foundList = foundId.map(data => cache.get(data) as T)
 					return [...chatList, ...chat2D.flat(), ...foundList]
 				})
 			} else {
@@ -83,7 +83,7 @@ export default function createNewContext<T> () {
 					let foundList = foundId.map(id => cache.get(id) as T)
 					missingIdList = idList.filter(id => !foundId.includes(id))
 					let promiseId = missingIdList.filter(id => queue.has(id))
-					missingIdList = missingIdList.filter(id => promiseId.includes(id))
+					missingIdList = missingIdList.filter(id => !promiseId.includes(id))
 					let promiseList = promiseId.map(id => queue.get(id) as Promise<T[] | T>)
 					const promise = fetchManyDataFromApi<T>(missingIdList, apiEndpoint)
 					missingIdList.forEach(id => {
@@ -113,7 +113,7 @@ function fetchDataFromApi<T> (id: string, apiEndpoint: string) {
 }
 
 function fetchManyDataFromApi<T> (id: string[], apiEndpoint: string): Promise<T[]> {
-	return axios.post<T[]>(apiEndpoint, {params: {id}}).then(r => r.data)
+	return axios.post<T[]>(apiEndpoint, {id}).then(r => r.data)
 }
 
 interface LockInterface {

@@ -12,7 +12,9 @@ const UsersInChat = memo((props: { users: string[] }) => {
 	useEffect(() => {
 		if (userContext) {
 			userContext.getUsers(props.users).then(d => {
-				setUserInfos(d)
+				if (d != null) {
+					setUserInfos(d)
+				}
 			})
 		}
 	}, [userContext, props.users])
