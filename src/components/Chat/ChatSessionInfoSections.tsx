@@ -16,7 +16,7 @@ export function ChatSessionInfoSections (props: { chatId: string }) {
 	}, [props.chatId, chatContext])
 
 	if (session)
-		return <div className='flex flex-col gap-2'>
+		return <div className='flex flex-col gap-2 p-2'>
 			<ChatSessionInfoSection title='Thành viên'>
 				<UsersInChat users={session.users}/>
 			</ChatSessionInfoSection>

@@ -28,7 +28,7 @@ export const ChatSessionInfo = forwardRef<ChatSessionInfoRef, ChatSessionInfoPro
 			<div ref={overlay} className='cursor-pointer z-[1] w-screen h-screen bg-amber-50/50' onClick={() => {
 				setModal(false)
 			}}></div>
-			<div className='absolute h-screen min-w-[100px] z-[2] top-0 right-0 border bg-blue-400'>
+			<div className='absolute h-screen min-w-[200px] z-[2] top-0 right-0 border bg-blue-400'>
 				<ChatSessionInfoSections chatId={props.chatId}/>
 			</div>
 		</div>

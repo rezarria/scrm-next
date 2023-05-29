@@ -5,8 +5,8 @@ export function ChatSessionInfoSection (props: { title: string, children: ReactN
 	const [open, setOpen] = useState(false)
 
 	return (
-		<div>
-			<div className='flex flex-row justify-between cursor-pointer' onClick={() => {
+		<div className='bg-white rounded'>
+			<div className='flex flex-row justify-between cursor-pointer hover:bg-white rounded p-1' onClick={() => {
 				setOpen(!open)
 			}}>
 				<h2 className='select-none'>{props.title}</h2>
@@ -14,7 +14,7 @@ export function ChatSessionInfoSection (props: { title: string, children: ReactN
 					<KeyboardArrowDownIcon/>
 				</div>
 			</div>
-			<div className={`${open ? '' : 'hidden'}`}>
+			<div className={`${open ? 'bg-blue-400 my-2 mx-1 rounded' : 'hidden'}`}>
 				{
 					props.children
 				}
