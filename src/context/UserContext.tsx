@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useRef, useState } from 'react'
+import { createContext, ReactNode, useRef } from 'react'
 import UserInfo from '@/model/UserInfo'
 import axios from 'axios'
 
@@ -19,7 +19,7 @@ interface UserContextProviderProps {
 export function UserContextProvider (props: UserContextProviderProps) {
 	const users = useRef<UserInfo[]>([])
 	const job = useRef<{ task: Promise<UserInfo | UserInfo[] | null | undefined> | null }>({task: null})
-	const [userContextValue] = useState<UserContextState>({
+	const userContextValue: UserContextState = {
 		getUser: async id => {
 			console.log('bắt đầu truy vấn')
 			let user = users.current.find(x => x.id === id)
@@ -85,7 +85,7 @@ export function UserContextProvider (props: UserContextProviderProps) {
 
 			return await job.current.task as UserInfo[]
 		}
-	})
+	}
 	return (
 		<UserContext.Provider value={userContextValue}>
 			{

@@ -1,8 +1,9 @@
-import { useContext, useEffect, useState } from 'react'
+import { memo, useContext, useEffect, useState } from 'react'
 import UserInfo from '@/model/UserInfo'
 import UserContext from '@/context/UserContext'
 
-export function UsersInChat (props: { users: string[] }) {
+// eslint-disable-next-line react/display-name
+const UsersInChat = memo((props: { users: string[] }) => {
 	const [userInfos, setUserInfos] = useState<UserInfo[]>([])
 	const userContext = useContext(UserContext)
 
@@ -23,4 +24,6 @@ export function UsersInChat (props: { users: string[] }) {
 			}
 		</div>
 	)
-}
+})
+
+export default UsersInChat

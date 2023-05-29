@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import Chat from '@/model/Chat'
 import ChatSessionContext from '@/context/ChatSessionContext'
 import { ChatSessionInfoSection } from '@/components/Chat/ChatSessionInfoSection'
-import { UsersInChat } from '@/components/Chat/UsersInChat'
+import UsersInChat from '@/components/Chat/UsersInChat'
 
 export function ChatSessionInfoSections (props: { chatId: string }) {
 	const [session, setSession] = useState<Chat | null>(null)
