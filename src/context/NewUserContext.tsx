@@ -4,6 +4,7 @@ import axios from 'axios'
 interface ContextInterface<T> {
 	get: (id: string) => Promise<T | undefined>
 	getMany: (idList: string[]) => Promise<T[] | undefined>
+	getAll: ()=>T[]
 }
 
 export default function createNewContext<T> () {
@@ -14,6 +15,7 @@ export default function createNewContext<T> () {
 	const locks: Map<string, LockInterface> = new Map<string, LockInterface>()
 
 	return {
+		getAll: ()=> Array.from(cache.values()),
 		async get (id: string): Promise<T | undefined> {
 			if (cache.has(id)) {
 				return Promise.resolve(cache.get(id))
