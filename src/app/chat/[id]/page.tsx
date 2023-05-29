@@ -23,29 +23,39 @@ export default function Page (props: PageProps) {
 	const [userInfo, setUserInfo] = useState<UserInfo[]>([])
 	const [session, setSession] = useState<Chat>()
 	const [loading, setLoading] = useState(true)
+	const [force, setForce] = useState(true)
 
 	useEffect(() => {
+
+		const forceRender = () => {
+			setForce(!force)
+		}
+
+		if (sessionContext) {
+			sessionContext.subscribe(forceRender)
+		}
+
 		if (sessionContext != null) {
 			sessionContext.getSession(props.params.id).then(d => {
 				if (d != null) {
 					setSession(d)
 					if (userInfoContext && currentUser) {
 						let userIds = d.users.filter(i => i.localeCompare(currentUser.user.id))
-						let users: UserInfo[] = []
-						Promise.all(userIds.map(id =>
-							userInfoContext.getUser(id)
-								.then(u => u != null ? u : null)
-						)).then(value => {
-							let newInfo = value.filter(v => v != null) as UserInfo[]
-							setUserInfo([...userInfo, ...newInfo])
-							setLoading(false)
+						userInfoContext.getUsers(userIds).then(value => {
+							if (value != null) {
+								setUserInfo(value)
+								setLoading(false)
+							}
 						})
 
 					}
 				}
 			})
 		}
-	}, [props.params.id, sessionContext])
+		return () => {
+			sessionContext?.unsubscribe(forceRender)
+		}
+	}, [props.params.id])
 
 	if (loading) return <h1>Loading...</h1>
 

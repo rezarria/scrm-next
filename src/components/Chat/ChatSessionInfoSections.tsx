@@ -18,7 +18,7 @@ export function ChatSessionInfoSections (props: { chatId: string }) {
 	if (session)
 		return <div className='flex flex-col gap-2 p-2'>
 			<ChatSessionInfoSection title='Thành viên'>
-				<UsersInChat users={session.users}/>
+				<UsersInChat chat={session}/>
 			</ChatSessionInfoSection>
 		</div>
 	else

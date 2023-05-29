@@ -50,7 +50,7 @@ export function ChatSessionItemById (props: ChatSessionItemByIdProps) {
 			Promise.all(props.session.users.filter(i => i.localeCompare(currentUser!.user.id) != 0).map(userId => context?.getUser(userId)))
 				.then(t => {
 					let userInfoList = t.filter(t => t != null) as UserInfo[]
-					setUserInfo([...userInfo, ...userInfoList])
+					setUserInfo(userInfoList)
 					setLoading(false)
 				})
 		}
@@ -74,13 +74,15 @@ export function ChatSessionItemById (props: ChatSessionItemByIdProps) {
 		avatarNode = <>
 			<div className='w-full h-full flex flex-row justify-center items-center'>
 				{
-					userInfo.map(u => <div key={u.id} className='h-full w-1/2 overflow-hidden'>
-						{
-							u.avatar && u.avatar.length != 0 &&
-                            <Image className='w-full h-full object-cover' src={u.avatar} width={200} height={200}
-                                   alt='avatar'/>
-						}
-					</div>)
+					userInfo.map(u => (
+						<div key={u.id} className='h-full w-1/2 overflow-hidden'>
+							{
+								u.avatar && u.avatar.length != 0 &&
+                                <Image className='w-full h-full object-cover' src={u.avatar} width={200} height={200}
+                                       alt='avatar'/>
+							}
+						</div>
+					))
 				}
 			</div>
 		</>

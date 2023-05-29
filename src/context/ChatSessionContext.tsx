@@ -20,7 +20,7 @@ interface ChatSessionContextProviderProps {
 }
 
 export function ChatSessionContextProvider (props: ChatSessionContextProviderProps) {
-	const chatSessions = useRef<Chat[]>([])
+	const chatSessions = useRef<Map<string, Chat>>(new Map())
 	const job = useRef<{ task: Promise<Chat | null | undefined> | null }>({task: null})
 	const subscribers = useRef<Function[]>([])
 	const startTime = useRef(new Date())
@@ -38,27 +38,35 @@ export function ChatSessionContextProvider (props: ChatSessionContextProviderPro
 					let newEndTime = new Date(r.data.reduce((p, c) => p.lastModifiedDate.localeCompare(c.lastModifiedDate) >= 0 ? p : c).lastModifiedDate)
 					if (newStartTime < startTime.current) startTime.current = newStartTime
 					if (newEndTime > endTime.current) endTime.current = newEndTime
-					let ids = r.data.map(i => i.id)
-					chatSessions.current = r.data.concat(chatSessions.current.filter(i => !ids.includes(i.id))).sort((a, b) => b.lastModifiedDate.localeCompare(a.lastModifiedDate))
+					r.data.forEach(item => {
+						chatSessions.current.set(item.id, item)
+					})
 					subscribers.current.forEach(t => t())
 				}
 			}
 		})
 	}
 
-	const updateTimeout = () => {
-		update().then(r => setTimeout(updateTimeout, 5000))
-	}
 
 	useEffect(() => {
+		let timeout: NodeJS.Timeout
+		const updateTimeout = () => {
+			update().then(r => {
+				timeout = setTimeout(updateTimeout, 5000)
+			})
+		}
+
 		updateTimeout()
+
+		return () => {
+			clearTimeout(timeout)
+		}
 	}, [])
 
 
 	let userContextValue: ChatSessionState = useMemo(() => {
-
 		return {
-			getAll: () => chatSessions.current,
+			getAll: () => Array.from(chatSessions.current.values()),
 			subscribe: callback => {
 				subscribers.current.push(callback)
 			},
@@ -69,7 +77,7 @@ export function ChatSessionContextProvider (props: ChatSessionContextProviderPro
 			},
 			update: update,
 			getSession: async id => {
-				let session = chatSessions.current.find(x => x.id === id)
+				let session = chatSessions.current.get(id)
 				console.log(session)
 				if (session != null) return session
 
@@ -77,7 +85,7 @@ export function ChatSessionContextProvider (props: ChatSessionContextProviderPro
 					if (job.current.task !== null) {
 						await job.current.task
 					}
-					session = chatSessions.current.find(x => x.id === id)
+					session = chatSessions.current.get(id)
 					if (session === undefined) break
 					return session
 				}
@@ -85,7 +93,7 @@ export function ChatSessionContextProvider (props: ChatSessionContextProviderPro
 				job.current.task = axios.get<Chat>(`http://localhost:8080/api/user/chat/getSession?id=${id}`)
 					.then(r => {
 						if (r.status === 200) {
-							chatSessions.current.push(r.data)
+							chatSessions.current.set(r.data.id, r.data)
 							return r.data
 						}
 						return null
