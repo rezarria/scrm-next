@@ -18,8 +18,11 @@ interface UserContextProviderProps {
 
 export function UserContextProvider (props: UserContextProviderProps) {
 	const users = useRef<UserInfo[]>([])
-	const job = useRef<{ task: Promise<UserInfo | UserInfo[] | null | undefined> | null }>({task: null})
 	const userContextValue: UserContextState = useMemo(() => {
+		let job: {
+			task: Promise<UserInfo | UserInfo[] | null | undefined> | null
+			lock: boolean
+		} = {task: null, lock: false}
 		return ({
 			getUser: async id => {
 				console.log('bắt đầu truy vấn')
@@ -27,10 +30,14 @@ export function UserContextProvider (props: UserContextProviderProps) {
 				if (user !== undefined) return user
 				console.log('không tìm thấy user trong cache, truy vấn api')
 
+				while (job.lock) {
+				}
 
-				if (job.current.task !== null) {
+				job.lock = true
+
+				if (job.task !== null) {
 					console.log('đang có bên khác yêu cầu. đợi....')
-					await job.current.task
+					await job.task
 					console.log('đợi xong...')
 				}
 
@@ -41,7 +48,7 @@ export function UserContextProvider (props: UserContextProviderProps) {
 				}
 
 				console.log(`bắt đầu truy vấn thông tin với id ${id}`)
-				job.current.task = axios.get<UserInfo>(`http://localhost:8080/api/user/info?id=${id}`)
+				job.task = axios.get<UserInfo>(`http://localhost:8080/api/user/info?id=${id}`)
 					.then(r => {
 						if (r.status === 200) {
 							users.current.push(r.data)
@@ -49,10 +56,11 @@ export function UserContextProvider (props: UserContextProviderProps) {
 						}
 						return null
 					}).finally(() => {
-						job.current.task = null
+						job.task = null
+						job.lock = false
 					})
 
-				return await job.current.task as UserInfo
+				return await job.task as UserInfo
 			},
 			getUsers: async id => {
 				let foundUsers = users.current.filter(i => id.includes(i.id))
@@ -60,8 +68,8 @@ export function UserContextProvider (props: UserContextProviderProps) {
 				let foundIdList = foundUsers.map(i => i.id)
 				let missingIdList = id.filter(i => !foundIdList.includes(i))
 
-				if (job.current.task !== null)
-					await job.current.task
+				if (job.task !== null)
+					await job.task
 				foundUsers.push(...users.current.filter(i => missingIdList.includes(i.id)))
 
 				if (foundUsers.length === id.length)
@@ -69,7 +77,7 @@ export function UserContextProvider (props: UserContextProviderProps) {
 
 				foundIdList = foundUsers.map(i => i.id)
 				missingIdList = id.filter(i => !foundIdList.includes(i))
-				job.current.task = axios.post<UserInfo[]>('http://localhost:8080/api/user/info', {
+				job.task = axios.post<UserInfo[]>('http://localhost:8080/api/user/info', {
 					id: missingIdList
 				})
 					.then(r => {
@@ -79,10 +87,10 @@ export function UserContextProvider (props: UserContextProviderProps) {
 						}
 						return null
 					}).finally(() => {
-						job.current.task = null
+						job.task = null
 					})
 
-				return await job.current.task as UserInfo[]
+				return await job.task as UserInfo[]
 			}
 		})
 	}, [])
