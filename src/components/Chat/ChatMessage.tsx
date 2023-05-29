@@ -4,10 +4,10 @@ import UserInfo from '@/model/UserInfo'
 import Image from 'next/image'
 import { useContext, useEffect, useState } from 'react'
 import UserContext from '@/context/UserContext'
-import {default as ChatMessageModel} from '@/model/ChatMessage'
+import { default as ChatMessageModel } from '@/model/ChatMessage'
 
 interface Props {
-	message:ChatMessageModel
+	message: ChatMessageModel
 	left: boolean
 	showAvatar?: boolean
 }

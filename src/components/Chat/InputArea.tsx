@@ -1,7 +1,6 @@
 import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
-import {useCallback, useContext, useEffect, useRef, useState} from 'react'
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
-import UploadImage from '@/components/Chat/UploadImage'
 import ButtonInputArea from '@/components/Chat/ButtonInputArea'
 
 interface Props {

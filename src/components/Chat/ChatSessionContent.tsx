@@ -1,10 +1,10 @@
-import {useContext, useEffect, useLayoutEffect, useRef, useState} from 'react'
+import { useContext, useEffect, useState } from 'react'
 import UserInfo from '@/model/UserInfo'
 import userContext from '@/context/UserContext'
 import currentUserInfoContext from '@/context/CurrentUserInfoContext'
 import ChatMessageList from '@/components/Chat/ChatMessageList'
 import Chat from '@/model/Chat'
-import {ChatMessageContextProvider} from '@/context/ChatMessageContext'
+import { ChatMessageContextProvider } from '@/context/ChatMessageContext'
 
 interface Props {
 	session: Chat
@@ -26,11 +26,11 @@ export default function ChatSessionContent (props: Props) {
 		return <p>Loading...</p>
 	return (
 		<ChatMessageContextProvider id={props.session.id}>
-						{
-							leftUser ?
-								<ChatMessageList/> :
-								<p>Loading...</p>
-						}
+			{
+				leftUser ?
+					<ChatMessageList/> :
+					<p>Loading...</p>
+			}
 		</ChatMessageContextProvider>
 
 	)

@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, useEffect, useState } from 'react'
+import { ReactNode, useContext, useEffect, useState } from 'react'
 import UserContext from '@/context/UserContext'
 import UserInfo from '@/model/UserInfo'
 import Image from 'next/image'
@@ -10,6 +10,7 @@ import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 interface Props {
 	name: string
 	avatar: string
+	avatarNode?: ReactNode | null
 	onClick?: Function
 }
 
@@ -17,8 +18,11 @@ export default function ChatSessionItem (props: Props) {
 	return <div className='flex flex-row gap-2 p-2 cursor-pointer rounded-r hover:bg-blue-400'>
 		<div className='rounded-full w-12 h-12 bg-black overflow-hidden'>
 			{
-				props.avatar != null && props.avatar.length != 0 &&
+				props.avatarNode == null && props.avatar != null && props.avatar.length != 0 &&
                 <Image className='w-full h-full object-cover' src={props.avatar} alt='avatar' width='300' height='300'/>
+			}
+			{
+				props.avatarNode != null && props.avatarNode
 			}
 		</div>
 		<div className='flex-col'>
@@ -37,21 +41,53 @@ export function ChatSessionItemById (props: ChatSessionItemByIdProps) {
 	let context = useContext(UserContext)
 	let currentUser = useContext(CurrentUserInfoContext)
 	const [loading, setLoading] = useState(true)
-	const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
+	const [userInfo, setUserInfo] = useState<UserInfo[]>([])
 
 	useEffect(() => {
 		let id = props.session.users.find(i => i.localeCompare(currentUser!.user.id) !== 0)
 		if (id === undefined) throw ''
-		if (context !== null) context.getUser(id).then(u => {
-			if (u != null)
-				setUserInfo(u)
-			setLoading(false)
-		})
+		if (context !== null && currentUser != null) {
+			Promise.all(props.session.users.filter(i => i.localeCompare(currentUser!.user.id) != 0).map(userId => context?.getUser(userId)))
+				.then(t => {
+					let userInfoList = t.filter(t => t != null) as UserInfo[]
+					setUserInfo([...userInfo, ...userInfoList])
+					setLoading(false)
+				})
+		}
 	}, [props.id])
 
 	if (context === null || userInfo == null || loading)
 		return <p>loading....</p>
+
+	let itemName = ''
+	let avatar = ''
+	let avatarNode: ReactNode | null = null
+
+	if (props.session.name.length != 0)
+		itemName = props.session.name
+	else if (userInfo.length > 1)
+		itemName = userInfo.map(i => i.fullName).join(', ')
+	else
+		itemName = userInfo[0].fullName
+
+	if (userInfo.length > 1)
+		avatarNode = <>
+			<div className='w-full h-full flex flex-row justify-center items-center'>
+				{
+					userInfo.map(u => <div key={u.id} className='h-full w-1/2 overflow-hidden'>
+						{
+							u.avatar && u.avatar.length != 0 &&
+                            <Image className='w-full h-full object-cover' src={u.avatar} width={200} height={200}
+                                   alt='avatar'/>
+						}
+					</div>)
+				}
+			</div>
+		</>
+	else
+		avatar = userInfo[0].avatar
+
 	return <>
-		<ChatSessionItem name={userInfo.fullName} avatar={userInfo.avatar}/>
+		<ChatSessionItem name={itemName} avatar={avatar} avatarNode={avatarNode}/>
 	</>
 }

@@ -1,8 +1,8 @@
-import {ChangeEventHandler, forwardRef, useImperativeHandle, useRef} from 'react'
+import { ChangeEventHandler, forwardRef, useImperativeHandle, useRef } from 'react'
 import axios from 'axios'
 
 interface UploadImageProps {
-	callback : () => void
+	callback?: () => void
 }
 
 export interface UploadImageRef {

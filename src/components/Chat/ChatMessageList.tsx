@@ -1,8 +1,7 @@
-import {useContext, useEffect, useInsertionEffect, useLayoutEffect, useRef, useState} from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import ChatMessageContext from '@/context/ChatMessageContext'
 import ChatMessage from '@/components/Chat/ChatMessage'
 import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
-import useEnhancedEffect from '@mui/utils/useEnhancedEffect'
 
 export default function ChatMessageList () {
 	let messageContext = useContext(ChatMessageContext)
@@ -21,11 +20,11 @@ export default function ChatMessageList () {
 			messageContext.subscribe(update)
 		}
 
-		setTimeout(()=>{
-			if(diemCuoi.current) {
+		setTimeout(() => {
+			if (diemCuoi.current) {
 				diemCuoi.current.scrollIntoView({behavior: 'smooth'})
 			}
-		},100)
+		}, 100)
 
 		return () => {
 			console.log('hủy đăng ký')
@@ -34,12 +33,12 @@ export default function ChatMessageList () {
 
 	}, [])
 	useEffect(() => {
-		setTimeout(()=>{
-			if(diemCuoi.current) {
+		setTimeout(() => {
+			if (diemCuoi.current) {
 				diemCuoi.current.scrollIntoView({behavior: 'smooth'})
 			}
-		},100)
-	},[messageContext?.getTime()])
+		}, 100)
+	}, [messageContext?.getTime()])
 
 
 	console.log('render lại danh sách tin ngắn')
@@ -59,7 +58,7 @@ export default function ChatMessageList () {
 													message={m}
 													left={left}
 													showAvatar={left}
-													/>
+								/>
 							})
 							.reverse()
 					}
