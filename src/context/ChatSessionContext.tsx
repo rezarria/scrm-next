@@ -3,11 +3,11 @@ import axios from 'axios'
 import Chat from '@/model/Chat'
 
 export interface ChatSessionState {
-	getAll: () => Chat[]
+	getAll: () => Promise<Chat[]>
 	getSession: (id: string) => Promise<Chat | null | undefined>
 	update: () => Promise<void>
-	subscribe: (callback: Function) => void
-	unsubscribe: (callback: Function) => void
+	subscribe: (callback: Function) => Promise<void>
+	unsubscribe: (callback: Function) => Promise<void>
 	delete: (id: string) => Promise<void>
 }
 
@@ -70,19 +70,32 @@ export function ChatSessionContextProvider (props: ChatSessionContextProviderPro
 	let userContextValue: ChatSessionState = useMemo(() => {
 		return {
 			delete: async (id: string) => {
-
+				if (updateTask.current) await updateTask.current
+				updateTask.current = new Promise<void>(resolve => {
+					chatSessions.current.delete(id)
+					subscribers.current.forEach(t => t())
+				}).finally(() => {
+					updateTask.current = null
+				})
+				await updateTask.current
 			},
-			getAll: () => Array.from(chatSessions.current.values()),
-			subscribe: callback => {
+			getAll: async () => {
+				if (updateTask.current) await updateTask.current
+				return Array.from(chatSessions.current.values())
+			},
+			subscribe: async callback => {
+				if (updateTask.current) await updateTask.current
 				subscribers.current.push(callback)
 			},
-			unsubscribe: callback => {
+			unsubscribe: async callback => {
+				if (updateTask.current) await updateTask.current
 				const index = subscribers.current.indexOf(callback)
 				if (index != -1)
 					subscribers.current.splice(index, 1)
 			},
 			update: update,
 			getSession: async id => {
+				if (updateTask.current) await updateTask.current
 				let session = chatSessions.current.get(id)
 				console.log(session)
 				if (session != null) return session
