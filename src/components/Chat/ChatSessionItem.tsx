@@ -55,7 +55,7 @@ export function ChatSessionItemById (props: ChatSessionItemByIdProps) {
 					}
 				})
 		}
-	}, [props.id,props.session.lastModifiedDate])
+	}, [context, currentUser, props.id, props.session.lastModifiedDate, props.session.users])
 
 	if (context === null || userInfo == null || loading)
 		return <p>loading....</p>

@@ -116,7 +116,11 @@ export function ChatSessionContextProvider (props: ChatSessionContextProviderPro
 							return r.data
 						}
 						return null
-					}).finally(() => {
+					})
+					.catch(reason => {
+						return null
+					})
+					.finally(() => {
 						job.current.task = null
 					})
 

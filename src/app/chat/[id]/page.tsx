@@ -9,6 +9,7 @@ import ChatSessionContext from '@/context/ChatSessionContext'
 import Chat from '@/model/Chat'
 import CurrentUserInfoContext from '@/context/CurrentUserInfoContext'
 import { Header } from '@/components/Chat/Header'
+import { useRouter } from 'next/navigation'
 
 interface PageProps {
 	params: {
@@ -24,12 +25,13 @@ export default function Page (props: PageProps) {
 	const [session, setSession] = useState<Chat>()
 	const [loading, setLoading] = useState(true)
 	const [force, setForce] = useState(true)
-
+	const router = useRouter()
 	useEffect(() => {
 
 		const forceRender = () => {
 			sessionContext?.getSession(props.params.id).then(d => {
 				if (d != null) setSession(d)
+				else router.push('/chat')
 			})
 			setForce(!force)
 		}
@@ -40,9 +42,9 @@ export default function Page (props: PageProps) {
 
 		if (sessionContext != null) {
 			sessionContext.getSession(props.params.id).then(d => {
-				if (d != null) {
+				if (d != null)
 					setSession(d)
-				}
+				else router.push('/chat')
 			})
 		}
 		return () => {

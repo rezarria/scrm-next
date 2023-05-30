@@ -17,9 +17,11 @@ export default function ChatSessionList () {
 
 	useEffect(() => {
 		const callback = () => {
-			console.log('render!')
-			setLoad(!load)
-			setChats(sessionContext!.getAll())
+			sessionContext!.getAll().then(d => {
+				if (d) setChats(d)
+			}).then(() => {
+				setLoad(!load)
+			})
 		}
 		sessionContext!.subscribe(callback)
 		return () => {
@@ -27,21 +29,21 @@ export default function ChatSessionList () {
 		}
 	}, [sessionContext])
 
-	let list = chats.map(t => {
-		let id = t.id
-		return (
-			<div key={t.id} onClick={() => {
-				router.push(`/chat/${id}`)
-			}}>
-				<ChatSessionItemById id={id} session={t}/>
-			</div>
-		)
-	})
-
+	if (chats == null) return <p>loading...</p>
+	console.log(chats)
 	return (
 		<div className={`overflow-y-scroll h-full pr-1 ${Styles.scrollbar__less}`}>
 			{
-				list
+				chats.map(t => {
+					let id = t.id
+					return (
+						<div key={t.id} onClick={() => {
+							router.push(`/chat/${id}`)
+						}}>
+							<ChatSessionItemById id={id} session={t}/>
+						</div>
+					)
+				})
 			}
 		</div>
 	)

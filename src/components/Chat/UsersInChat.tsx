@@ -7,7 +7,7 @@ import Chat from '@/model/Chat'
 import { AddMoreUser, AddMoreUserRef } from '@/components/Chat/AddMoreUser'
 
 // eslint-disable-next-line react/display-name
-const UsersInChat = memo((props: { chat:Chat }) => {
+const UsersInChat = memo((props: { chat: Chat }) => {
 	const [userInfos, setUserInfos] = useState<UserInfo[]>([])
 	const userContext = useContext(UserContext)
 	const addMoreUser = useRef<AddMoreUserRef>(null)
