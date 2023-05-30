@@ -1,7 +1,8 @@
 import Image from 'next/image'
+import { ReactNode } from 'react'
 
 export interface MenuSideProps {
-	items?: { icon?: string | null, title?: string | null, onClick?: Function }[];
+	items?: { icon?: string | null, iconElement?: ReactNode, title?: string | null, onClick?: Function }[];
 }
 
 export default function MenuSide (props: MenuSideProps) {
@@ -13,8 +14,11 @@ export default function MenuSide (props: MenuSideProps) {
 					if (n.onClick !== undefined) n.onClick()
 				}}>
 				<div className='rounded-full w-10 h-10 bg-neutral-400 overflow-hidden'>
-					{n.icon && <Image src={n.icon} width='500' height='500' alt='icon'
+					{!n.iconElement && n.icon && <Image src={n.icon} width='500' height='500' alt='icon'
                                       className='w-full h-full object-cover object-top'/>}
+					{
+						n.iconElement
+					}
 				</div>
 				{n.title && <p>{n.title}</p>}
 			</div>

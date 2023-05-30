@@ -11,6 +11,9 @@ import axios from 'axios'
 import GoMain from '@/components/GoMain'
 import { UserContextProvider } from '@/context/UserContext'
 import Notification from '@/components/Notification'
+import LogoutIcon from '@mui/icons-material/Logout'
+import { cookies } from 'next/headers'
+import { deleteAllCookies } from '@/utils/function'
 
 function thietLapAxios () {
 	axios.interceptors.request.use(function (config) {
@@ -69,6 +72,17 @@ function Left () {
 			title: userInfo.user.fullName,
 			onClick: () => {
 				router.push(`./user/${userInfo.user.id}`)
+			}
+		})
+		props.items?.push({
+			iconElement: <div className={'w-full h-full relative'}>
+				<LogoutIcon className='w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'/>
+			</div>,
+			title: 'Đăng xuất',
+			onClick: () => {
+				localStorage.clear()
+				deleteAllCookies()
+				router.push('/login')
 			}
 		})
 	}
