@@ -8,6 +8,7 @@ export interface ChatSessionState {
 	update: () => Promise<void>
 	subscribe: (callback: Function) => void
 	unsubscribe: (callback: Function) => void
+	delete: (id: string) => Promise<void>
 }
 
 const ChatSessionContext = createContext<ChatSessionState | null>(null)
@@ -25,8 +26,9 @@ export function ChatSessionContextProvider (props: ChatSessionContextProviderPro
 	const subscribers = useRef<Function[]>([])
 	const startTime = useRef(new Date())
 	const endTime = useRef(new Date())
+	const updateTask = useRef<Promise<void> | null>(null)
 	const update = () => {
-		return axios.get<Chat[]>('http://localhost:8080/api/user/chat/getSessionByTime', {
+		updateTask.current = axios.get<Chat[]>('http://localhost:8080/api/user/chat/getSessionByTime', {
 			params: {
 				start: startTime.current.toISOString(),
 				end: endTime.current.toISOString()
@@ -45,6 +47,7 @@ export function ChatSessionContextProvider (props: ChatSessionContextProviderPro
 				}
 			}
 		})
+		return updateTask.current
 	}
 
 
@@ -66,6 +69,9 @@ export function ChatSessionContextProvider (props: ChatSessionContextProviderPro
 
 	let userContextValue: ChatSessionState = useMemo(() => {
 		return {
+			delete: async (id: string) => {
+
+			},
 			getAll: () => Array.from(chatSessions.current.values()),
 			subscribe: callback => {
 				subscribers.current.push(callback)

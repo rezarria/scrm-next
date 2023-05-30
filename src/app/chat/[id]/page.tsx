@@ -28,6 +28,9 @@ export default function Page (props: PageProps) {
 	useEffect(() => {
 
 		const forceRender = () => {
+			sessionContext?.getSession(props.params.id).then(d => {
+				if (d != null) setSession(d)
+			})
 			setForce(!force)
 		}
 
@@ -39,16 +42,6 @@ export default function Page (props: PageProps) {
 			sessionContext.getSession(props.params.id).then(d => {
 				if (d != null) {
 					setSession(d)
-					if (userInfoContext && currentUser) {
-						let userIds = d.users.filter(i => i.localeCompare(currentUser.user.id))
-						userInfoContext.getUsers(userIds).then(value => {
-							if (value != null) {
-								setUserInfo(value)
-								setLoading(false)
-							}
-						})
-
-					}
 				}
 			})
 		}
@@ -56,6 +49,18 @@ export default function Page (props: PageProps) {
 			sessionContext?.unsubscribe(forceRender)
 		}
 	}, [props.params.id])
+
+	useEffect(() => {
+		if (userInfoContext && currentUser && session) {
+			let userIds = session.users.filter(i => i.localeCompare(currentUser.user.id))
+			userInfoContext.getUsers(userIds).then(value => {
+				if (value != null) {
+					setUserInfo(value)
+					setLoading(false)
+				}
+			})
+		}
+	}, [currentUser, session, userInfoContext])
 
 	if (loading) return <h1>Loading...</h1>
 
