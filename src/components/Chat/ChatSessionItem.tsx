@@ -55,7 +55,7 @@ export function ChatSessionItemById (props: ChatSessionItemByIdProps) {
 					}
 				})
 		}
-	}, [props.id])
+	}, [props.id,props.session.lastModifiedDate])
 
 	if (context === null || userInfo == null || loading)
 		return <p>loading....</p>
@@ -89,7 +89,6 @@ export function ChatSessionItemById (props: ChatSessionItemByIdProps) {
 		</>
 	else
 		avatar = userInfo[0].avatar
-
 	return <>
 		<ChatSessionItem name={itemName} avatar={avatar} avatarNode={avatarNode}/>
 	</>
