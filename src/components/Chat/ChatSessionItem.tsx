@@ -47,11 +47,12 @@ export function ChatSessionItemById (props: ChatSessionItemByIdProps) {
 		let id = props.session.users.find(i => i.localeCompare(currentUser!.user.id) !== 0)
 		if (id === undefined) throw ''
 		if (context !== null && currentUser != null) {
-			Promise.all(props.session.users.filter(i => i.localeCompare(currentUser!.user.id) != 0).map(userId => context?.getUser(userId)))
+			context.getUsers(props.session.users.filter(i => i.localeCompare(currentUser!.user.id) != 0))
 				.then(t => {
-					let userInfoList = t.filter(t => t != null) as UserInfo[]
-					setUserInfo(userInfoList)
-					setLoading(false)
+					if (t != null) {
+						setUserInfo(t)
+						setLoading(false)
+					}
 				})
 		}
 	}, [props.id])

@@ -4,7 +4,7 @@ import axios from 'axios'
 interface ContextInterface<T> {
 	get: (id: string) => Promise<T | undefined>
 	getMany: (idList: string[]) => Promise<T[] | undefined>
-	getAll: ()=>T[]
+	getAll: () => T[]
 }
 
 export default function createNewContext<T> () {
@@ -15,7 +15,7 @@ export default function createNewContext<T> () {
 	const locks: Map<string, LockInterface> = new Map<string, LockInterface>()
 
 	return {
-		getAll: ()=> Array.from(cache.values()),
+		getAll: () => Array.from(cache.values()),
 		async get (id: string): Promise<T | undefined> {
 			if (cache.has(id)) {
 				return Promise.resolve(cache.get(id))
@@ -62,14 +62,15 @@ export default function createNewContext<T> () {
 			if (missingIdList.length === 0) {
 				// @ts-ignore
 				return Promise.resolve(Array.from(cache.values()).filter(id => foundId.includes(id.id)))
-			} else if (missingIdList.every(i=>queue.has(i))) {
+			} else if (missingIdList.every(i => queue.has(i))) {
 				let queueIdList = Array.from(queue.keys()).filter(i => missingIdList.includes(i))
 				let queueList = queueIdList.map(id => queue.get(id))
 				return Promise.all(queueList).then(result => {
-					let chatList = result.filter(data => typeof data === 'object') as T[]
-					let chat2D = result.filter(data => Array.isArray(data)) as T[][]
+					let chatList = result.filter(data => !Array.isArray(data)) as T[]
+					let chat2D = (result.filter(data => Array.isArray(data)) as T[][]).flat()
 					let foundList = foundId.map(data => cache.get(data) as T)
-					return [...chatList, ...chat2D.flat(), ...foundList]
+					// @ts-ignore
+					return [...chatList, ...chat2D, ...foundList].filter((value, index, array) => index === array.findIndex(o => o.id === value.id))
 				})
 			} else {
 				missingIdList.forEach(id => {
@@ -93,10 +94,11 @@ export default function createNewContext<T> () {
 					missingIdList.forEach(id => queue.delete(id))
 					// @ts-ignore
 					missingData.forEach(data => cache.set(data.id, data))
-					return Promise.all(promiseList).then(reuslt => {
-						let chatList = reuslt.filter(i => typeof i === 'object') as T[]
-						let chat2D = reuslt.filter(i => Array.isArray(i)) as T[][]
-						return [...chatList, ...chat2D.flat(), ...foundList, ...missingData]
+					return Promise.all(promiseList).then(result => {
+						let chatList = result.filter(i => !Array.isArray(i)) as T[]
+						let chat2D = result.filter(i => Array.isArray(i)) as T[][]
+						// @ts-ignore
+						return [...chatList, ...chat2D.flat(), ...foundList, ...missingData].filter((value, index, array) => index === array.findIndex(o => o.id === value.id))
 					})
 				} finally {
 					locks.forEach(lock => lock.release())
