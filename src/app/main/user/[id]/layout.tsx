@@ -18,14 +18,20 @@ interface Props {
 
 const homeUserInfo = createContext<UserInfo | null>(null)
 
-export { homeUserInfo }
+
+const utilContext = createContext<{ func: Function }>({
+	func: () => {
+	}
+})
 
 export default function Layout (props: Props) {
 	const [userInfo, setUserinfo] = useState<UserInfo | null>(null)
 	const [self, setSelf] = useState(false)
 	const [error, setError] = useState(false)
 	const router = useRouter()
+	const [force, setForce] = useState(true)
 	let myInfo = useContext(CurrentUserInfoContext)
+	const render = () => setForce(!force)
 	useEffect(() => {
 		if (myInfo === null) throw 'userinfo null'
 		if (myInfo.user.id === props.params.id) {
@@ -43,23 +49,27 @@ export default function Layout (props: Props) {
 		}
 	}, [myInfo])
 
-	return <div className='w-full h-full'>
-		{error || userInfo === null ?
-			<div className='text-white bg-red-700 h-auto p-2 flex flex-row justify-between items-center'>
-				<span>KHÔNG TÌM THẤY NGƯỜI DÙNG</span><Button
-				className='p-1' title='Quay lại trang đầu' onClick={() => {
-				router.push('/')
-			}}/>
+	return (
+		<utilContext.Provider value={{func: render}}>
+			<div className='w-full h-full'>
+				{error || userInfo === null ?
+					<div className='text-white bg-red-700 h-auto p-2 flex flex-row justify-between items-center'>
+						<span>KHÔNG TÌM THẤY NGƯỜI DÙNG</span><Button
+						className='p-1' title='Quay lại trang đầu' onClick={() => {
+						router.push('/')
+					}}/>
+					</div>
+					:
+					<>
+						<homeUserInfo.Provider value={userInfo}>
+							{userInfo && <UserHome userInfo={userInfo} addFriendButton={!self}/>}
+							<DanhSachChucNang id={props.params.id} userInfo={userInfo}/>
+							{props.children}
+						</homeUserInfo.Provider>
+					</>}
 			</div>
-			:
-			<>
-				<homeUserInfo.Provider value={userInfo}>
-					{userInfo && <UserHome userInfo={userInfo} addFriendButton={!self}/>}
-					<DanhSachChucNang id={props.params.id} userInfo={userInfo}/>
-					{props.children}
-				</homeUserInfo.Provider>
-			</>}
-	</div>
+		</utilContext.Provider>
+	)
 }
 
 function DanhSachChucNang ({id, userInfo}: { id: string, userInfo: UserInfo }) {
@@ -67,7 +77,7 @@ function DanhSachChucNang ({id, userInfo}: { id: string, userInfo: UserInfo }) {
 		<ul className='bg-neutral-300 px-14 flex flex-row gap-4 pb-2'>
 			<MucChucNang name='Tường nhà' url={`/user/${id}`}/>
 			<MucChucNang name='Bạn bè' url={`/user/${id}/friends`}>
-                <span
+				<span
 					className='round bg-amber-100 p-1 rounded leading-4 inline-block text-blue-600 font-bold'>{userInfo.friends.length}</span>
 			</MucChucNang>
 		</ul>
@@ -90,3 +100,6 @@ function MucChucNang (props: {
 		</li>
 	)
 }
+
+
+export { homeUserInfo, utilContext }

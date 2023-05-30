@@ -1,10 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import Image from 'next/image'
 import NutHuyKetBan from '@/components/FriendList/NutHuyKetBan'
 import { useRouter } from 'next/navigation'
+import { utilContext } from '@/app/main/user/[id]/layout'
 
 interface Props {
 	id: string
@@ -19,6 +20,10 @@ interface FriendInfo {
 export default function FriendList (props: Props) {
 	const [friendInfo, setFriendInfo] = useState<FriendInfo[]>([])
 	const router = useRouter()
+	const [force, setForce] = useState(true)
+	let uContext = useContext(utilContext)
+
+
 	const onClick = useCallback((
 			(id: string) => {
 				return () => {
@@ -31,11 +36,12 @@ export default function FriendList (props: Props) {
 	useEffect(() => {
 		axios.get<FriendInfo[]>(`http://localhost:8080/api/user/friend/list?id=${props.id}`)
 			.then(r => {
-				if (r.status === 200) {
+				if (r.status === 200)
 					setFriendInfo(r.data)
-				}
+
 			})
-	}, [props.id])
+	}, [props.id, force])
+
 	return (
 		<div className='bg-white pt-8 px-14'>
 			<div className='px-2'>
@@ -59,7 +65,10 @@ export default function FriendList (props: Props) {
 									className='text-neutral-500 text-xs cursor-pointer group-hover:text-black'>@{u.id}</div>
 							</div>
 							<div className='group flex flex-row-reverse flex-grow items-center'>
-								<NutHuyKetBan/>
+								<NutHuyKetBan id={u.id} onDelete={() => {
+									setForce(!force)
+									uContext.func()
+								}}/>
 							</div>
 						</div>
 					))
