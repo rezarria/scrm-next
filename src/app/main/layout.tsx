@@ -12,7 +12,6 @@ import GoMain from '@/components/GoMain'
 import { UserContextProvider } from '@/context/UserContext'
 import Notification from '@/components/Notification'
 import LogoutIcon from '@mui/icons-material/Logout'
-import { cookies } from 'next/headers'
 import { deleteAllCookies } from '@/utils/function'
 
 function thietLapAxios () {

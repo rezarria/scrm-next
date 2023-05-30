@@ -7,4 +7,4 @@ export default interface UserInfo {
 	friendStatus: keyof typeof FriendStatus
 }
 
-export enum FriendStatus {BLOCK, NON_FRIEND, FRIEND, INVITING}
+export enum FriendStatus {BLOCK, NON_FRIEND, FRIEND, INVITING, NONE}

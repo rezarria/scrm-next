@@ -63,7 +63,8 @@ export default function Layout (props: Props) {
 					<>
 						<homeUserInfo.Provider value={userInfo}>
 							{userInfo && <UserHome userInfo={userInfo} addFriendButton={!self}/>}
-							<DanhSachChucNang id={props.params.id} userInfo={userInfo}/>
+							<DanhSachChucNang id={props.params.id} userInfo={userInfo}
+											  self={myInfo?.user.id === props.params.id}/>
 							{props.children}
 						</homeUserInfo.Provider>
 					</>}
@@ -72,15 +73,21 @@ export default function Layout (props: Props) {
 	)
 }
 
-function DanhSachChucNang ({id, userInfo}: { id: string, userInfo: UserInfo }) {
+function DanhSachChucNang ({id, userInfo, self}: { id: string, userInfo: UserInfo, self: boolean }) {
 	return (
 		<ul className='bg-neutral-300 px-14 flex flex-row gap-4 pb-2'>
 			<MucChucNang name='Tường nhà' url={`/user/${id}`}/>
 			<MucChucNang name='Bạn bè' url={`/user/${id}/friends`}>
-				<span
-					className='round bg-amber-100 p-1 rounded leading-4 inline-block text-blue-600 font-bold'>{userInfo.friends.length}</span>
+				<>
+					{
+						userInfo.friends && <span
+                            className='round bg-amber-100 p-1 rounded leading-4 inline-block text-blue-600 font-bold'>{userInfo.friends.length}</span>
+					}
+				</>
 			</MucChucNang>
-			<MucChucNang name={'thông tin người dùng'} url={`/user/${id}/info`}/>
+			{
+				self && <MucChucNang name={'thông tin người dùng'} url={`/user/${id}/info`}/>
+			}
 		</ul>
 	)
 }

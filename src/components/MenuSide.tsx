@@ -15,7 +15,7 @@ export default function MenuSide (props: MenuSideProps) {
 				}}>
 				<div className='rounded-full w-10 h-10 bg-neutral-400 overflow-hidden'>
 					{!n.iconElement && n.icon && <Image src={n.icon} width='500' height='500' alt='icon'
-                                      className='w-full h-full object-cover object-top'/>}
+                                                        className='w-full h-full object-cover object-top'/>}
 					{
 						n.iconElement
 					}

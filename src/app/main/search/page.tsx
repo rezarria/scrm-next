@@ -21,7 +21,7 @@ export default function Page () {
 
 	useEffect(() => {
 		if (content) {
-			userSeach(content).then(d => users.current = d).then(()=>update())
+			userSeach(content).then(d => users.current = d).then(() => update())
 		}
 	}, [content])
 
@@ -72,7 +72,7 @@ function FriendButton (props: { id: string, status: FriendStatus }) {
 			return (
 				<button
 					onClick={() => {
-						axios.delete('http://localhost:8080/apii/user/friend/remove', {
+						axios.delete('http://localhost:8080/api/user/friend/remove', {
 							params: {
 								id: props.id
 							}

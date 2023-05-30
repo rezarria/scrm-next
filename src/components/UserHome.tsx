@@ -2,10 +2,49 @@ import UserInfo from '@/model/UserInfo'
 import Image from 'next/image'
 import Button from '@/components/Button'
 import axios from 'axios'
+import { Status } from '@/model/FriendRequest'
+import { useState } from 'react'
 
 interface UserHomeProps {
 	userInfo: UserInfo,
 	addFriendButton?: boolean
+}
+
+function FriendButton (props: UserHomeProps) {
+	const [show, setShow] = useState(true)
+	if (!show) return <></>
+	if (props.userInfo.friendStatus === 'INVITING')
+		return <div className={'rounded p-2 my-1 bg-yellow-400 w-full'}>
+			<h3 className={'text-center'}>Lời mời kết bạn</h3>
+			<div className={'flex flex-row w-full'}>
+				<button
+					onClick={resolveRequest(props.userInfo.id, Status.YES, () => setShow(false))}
+					className={'flex-1 rounded rounded-r-0 p-2 text-black hover:bg-green-400 hover:text-gray-100'}>đồng
+					ý
+				</button>
+				<button
+					onClick={resolveRequest(props.userInfo.id, Status.NO, () => setShow(false))}
+					className={'flex-1 rounded rounded-l-0 p-2 text-black hover:bg-red-700 hover:text-white'}>từ
+					chối
+				</button>
+			</div>
+		</div>
+	return <Button title='KẾT BẠN' onClick={() => {
+		axios.post('http://localhost:8080/api/user/friend/request', {
+			userId: props.userInfo.id
+		})
+	}}/>
+}
+
+function resolveRequest (id: string, status: Status, callback?: Function) {
+	return () => {
+		axios.post('http://localhost:8080/api/user/friend/responseRequestByUserId', {id, status})
+			.then(r => {
+				if (r.status === 200) {
+					callback?.()
+				}
+			})
+	}
 }
 
 export default function UserHome (props: UserHomeProps) {
@@ -25,11 +64,7 @@ export default function UserHome (props: UserHomeProps) {
 				<div className='flex flex-col justify-end'>
 					<div className='text-4xl'>{props.userInfo.fullName}</div>
 					<div className='min-h-[40%] flex flex-row items-start'>
-						{props.addFriendButton === true && <Button title='KẾT BẠN' onClick={() => {
-							axios.post('http://localhost:8080/api/user/friend/request', {
-								userId: props.userInfo.id, mode: 2
-							})
-						}}/>}
+						{props.addFriendButton === true && FriendButton(props)}
 					</div>
 				</div>
 			</div>
