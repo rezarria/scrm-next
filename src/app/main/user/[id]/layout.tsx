@@ -80,6 +80,7 @@ function DanhSachChucNang ({id, userInfo}: { id: string, userInfo: UserInfo }) {
 				<span
 					className='round bg-amber-100 p-1 rounded leading-4 inline-block text-blue-600 font-bold'>{userInfo.friends.length}</span>
 			</MucChucNang>
+			<MucChucNang name={'thông tin người dùng'} url={`/user/${id}/info`}/>
 		</ul>
 	)
 }

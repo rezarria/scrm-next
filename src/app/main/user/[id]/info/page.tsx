@@ -23,6 +23,7 @@ export default function Page () {
 	return (
 		<div className='flex flex-col bg-white px-16 py-6 gap-4'>
 			<TextInput ref={fullName} title='Họ tên' init={userInfo.fullName ? userInfo.fullName : ''}/>
+			<ChangePassword id={userInfo.id}/>
 			<ImageInput ref={avatar} title='Avatar' init={userInfo.avatar ? userInfo.avatar : ''}/>
 			<ImageInput ref={background} title='Ảnh nền' init={userInfo.background ? userInfo.background : ''}/>
 			<button className='rounded p-2 bg-blue-400 text-white font-bold' onClick={event => {
@@ -38,6 +39,41 @@ export default function Page () {
 			}}>Lưu
 			</button>
 			<ThongBao ref={thongBaoRef}/>
+		</div>
+	)
+}
+
+function ChangePassword (props: { id: string }) {
+	const modal = useRef<HTMLDivElement>(null)
+	return (
+		<div className='flex flex-row'>
+			<label className='w-[25%]'>Mật khẩu</label>
+			<button className='rounded bg-green-300 p-2 text-gray-500 font-bold w-fit'>Đổi mật khẩu</button>
+			<div ref={modal} className={'fixed top-0 left-0 w-screen h-screen bg-green-300/50 z-[100]'}>
+				<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded bg-white border p-4 w-1/3 flex flex-col gap-4'>
+					<h2 className={'text-2xl'}>Đổi mật khẩu</h2>
+					<div className={'flex flex-col gap-2'}>
+						<div  className={Style.inputGroup}>
+							<label>Mật khẩu cũ</label>
+							<input type='text' className={'sec'} style={{
+								inputSecurity:'initial'
+							}}/>
+						</div>
+						<div  className={Style.inputGroup}>
+							<label>Mật khẩu mới</label>
+							<input type='text'/>
+						</div>
+						<div className={Style.inputGroup}>
+							<label>Nhập mật khẩu mới</label>
+							<input type='text'/>
+						</div>
+					</div>
+					<div className={'pl-[25%] w-full flex flex-row justify-between'}>
+						<button className={'flex-1 rounded rounded-r-none border border-r-0 cursor-pointer hover:bg-blue-400 p-2 text-xl'}>Đổi</button>
+						<button className={'flex-1 rounded rounded-l-none border border-l-0 cursor-pointer hover:bg-blue-400 p-2 text-xl'}>Hủy</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	)
 }
