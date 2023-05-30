@@ -11,7 +11,7 @@ export default interface Notification {
 }
 
 export enum Mode {
-	FriendRequest, NewPost, ReplyComment
+	FriendRequest, NewPost, ReplyComment, Custom
 }
 
 export enum Staus {
