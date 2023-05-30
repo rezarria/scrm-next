@@ -45,38 +45,137 @@ export default function Page () {
 
 function ChangePassword (props: { id: string }) {
 	const modal = useRef<HTMLDivElement>(null)
+	const submitButton = useRef<SubmitButtonRef>(null)
+	const passwordInput = useRef<NewPasswordInputRef>(null)
+
 	return (
 		<div className='flex flex-row'>
 			<label className='w-[25%]'>Mật khẩu</label>
-			<button className='rounded bg-green-300 p-2 text-gray-500 font-bold w-fit'>Đổi mật khẩu</button>
-			<div ref={modal} className={'fixed top-0 left-0 w-screen h-screen bg-green-300/50 z-[100]'}>
-				<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded bg-white border p-4 w-1/3 flex flex-col gap-4'>
+			<button
+				onClick={() => {
+					modal.current?.classList.remove('hidden')
+				}}
+				className='rounded bg-green-300 p-2 text-gray-500 font-bold w-fit'>Đổi mật khẩu
+			</button>
+			<div ref={modal} className={'fixed top-0 left-0 w-screen h-screen bg-green-300/50 z-[100] hidden'}>
+				<div
+					className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded bg-white border p-4 w-1/3 flex flex-col gap-4'>
 					<h2 className={'text-2xl'}>Đổi mật khẩu</h2>
 					<div className={'flex flex-col gap-2'}>
-						<div  className={Style.inputGroup}>
-							<label>Mật khẩu cũ</label>
-							<input type='text' className={'sec'} style={{
-								inputSecurity:'initial'
-							}}/>
-						</div>
-						<div  className={Style.inputGroup}>
-							<label>Mật khẩu mới</label>
-							<input type='text'/>
-						</div>
-						<div className={Style.inputGroup}>
-							<label>Nhập mật khẩu mới</label>
-							<input type='text'/>
-						</div>
+						<NewPasswordInput ref={passwordInput} unlock={submitButton.current?.unlock}
+										  lock={submitButton.current?.lock}/>
 					</div>
 					<div className={'pl-[25%] w-full flex flex-row justify-between'}>
-						<button className={'flex-1 rounded rounded-r-none border border-r-0 cursor-pointer hover:bg-blue-400 p-2 text-xl'}>Đổi</button>
-						<button className={'flex-1 rounded rounded-l-none border border-l-0 cursor-pointer hover:bg-blue-400 p-2 text-xl'}>Hủy</button>
+						<SubmitButton ref={submitButton} userId={props.id}
+									  getPassword={() => passwordInput.current!.getPassword()}
+									  closeModal={() => {
+										  modal.current?.classList.add('hidden')
+									  }}
+						/>
+						<button
+							onClick={() => {
+								modal.current?.classList.add('hidden')
+							}}
+							className={'flex-1 rounded rounded-l-none border border-l-0 cursor-pointer hover:bg-blue-400 p-2 text-xl'}>Hủy
+						</button>
 					</div>
 				</div>
 			</div>
 		</div>
 	)
 }
+
+
+interface NewPasswordInputRef {
+	getPassword: () => { old: string, new: string }
+}
+
+interface NewPasswordProps {
+	lock?: Function
+	unlock?: Function
+}
+
+// eslint-disable-next-line react/display-name
+const NewPasswordInput = forwardRef<NewPasswordInputRef, NewPasswordProps>((props, ref) => {
+	const [input0, setInput0] = useState('')
+	const [input1, setInput1] = useState('')
+	const [input2, setInput2] = useState('')
+	useImperativeHandle(ref, () => ({
+		getPassword: () => {
+			if (input0.length != 0 && input1.length != 0 && input1.localeCompare(input2) == 0)
+				return {old: input0, new: input1}
+			else return {old: '', new: ''}
+		}
+	}), [input0, input1, input2])
+	if (input0.length != 0 && input1.length != 0 && input1.localeCompare(input2) == 0)
+		props.unlock?.()
+	else
+		props.lock?.()
+	return <>
+		<div className={Style.inputGroup}>
+			<label>Mật khẩu cũ</label>
+			<input type='text' className={`${Style.password}`} onChange={e => setInput0(e.target.value)}/>
+		</div>
+		<div className={Style.inputGroup}>
+			<label>Mật khẩu mới</label>
+			<input type='text' className={`${Style.password}`} onChange={e => setInput1(e.target.value)}/>
+		</div>
+		<div className={Style.inputGroup}>
+			<label>Nhập mật khẩu mới</label>
+			<input type='text' className={`${Style.password}`} onChange={e => setInput2(e.target.value)}/>
+		</div>
+	</>
+})
+
+interface SubmitButtonRef {
+	lock: () => void
+	unlock: () => void
+}
+
+interface SubmitButtonProps {
+	userId: string
+	getPassword: () => { old: string, new: string }
+	closeModal: Function
+}
+
+
+// eslint-disable-next-line react/display-name
+const SubmitButton = forwardRef<SubmitButtonRef, SubmitButtonProps>((props, ref) => {
+	const [lock, setLock] = useState(true)
+	useImperativeHandle(ref, () => ({
+		lock: () => {
+			setLock(true)
+		},
+		unlock: () => {
+			setLock(false)
+		}
+	}), [])
+
+	if (lock) return (
+		<button
+			className={' flex-1 rounded rounded-r-none border border-r-0 hover:bg-red-400 p-2 text-xl cursor-no-drop'}>...
+		</button>
+	)
+
+	return (
+		<button
+			onClick={() => {
+				let data = props.getPassword()
+				axios.post('http://localhost:8080/api/account/changePassword', {
+					userId: props.userId,
+					oldPassword: data.old,
+					newPassword: data.new
+				}).then(r => {
+					if (r.status === 200) {
+						props.closeModal()
+					}
+				})
+			}}
+			className={' flex-1 rounded rounded-r-none border border-r-0 cursor-pointer hover:bg-blue-400 p-2 text-xl'}>Đổi
+		</button>
+	)
+})
+
 
 type ThongBaoRef = {
 	show: (status: boolean, n?: number) => void
