@@ -60,7 +60,7 @@ function Item ({user, onClick}: { user: UserInfo, onClick: (r: boolean) => void 
 
 // eslint-disable-next-line react/display-name
 export const AddMoreUser = forwardRef<AddMoreUserRef, AddMoreUserProps>((props, ref) => {
-	const [open, setOpen] = useState(true)
+	const [open, setOpen] = useState(false)
 	const currentUser = useContext(CurrentUserInfoContext)
 	const userContext = useContext(UserContext)
 	const [users, setUsers] = useState<UserInfo[]>([])
